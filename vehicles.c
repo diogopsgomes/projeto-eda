@@ -1,0 +1,327 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "header.h"
+
+void vehiclesMain()
+{
+    int option, id, type;
+    float battery, range;
+    char location[SIZE_LOCATION], typeStr[SIZE_TYPE], batteryStr[SIZE_BATTERY], rangeStr[SIZE_RANGE];
+
+    do {
+        Vehicle* head = readVehicles();
+        Type* typesHead = readTypes();
+
+        clrscr();
+        menuHeaderVehicles();
+
+        if (listVehicles(head, typesHead) == 0) {
+            puts("\n                                        Nao existem veiculos registados!                                         \n");
+        }
+
+        menuFooterVehicles();
+        scanf("%d", &option);
+
+        switch (option) {
+            case 1:
+                clrscr();
+                menuTitleInsertVehicle();
+                printf("Tipo: ");
+                scanf("%d", &type);
+                printf("Bateria: ");
+                scanf("%f", &battery);
+                printf("Autonomia: ");
+                scanf("%f", &range);
+                printf("Localizacao: ");
+                readStr(location);
+
+                head = insertVehicle(head, assignVehicleId(head), type, battery, range, location);
+                saveVehicles(head);
+
+                break;
+            case 2:
+                menuTitleEditVehicle();
+                scanf("%d", &id);
+
+                if (!existVehicle(head, id)) break;
+
+                type = battery = range = -1;
+
+                printf("Tipo: ");
+                readStr(typeStr);
+                if (strlen(typeStr) > 0) type = atoi(typeStr);
+
+                printf("Bateria: ");
+                readStr(batteryStr);
+                if (strlen(batteryStr) > 0) battery = atof(batteryStr);
+
+                printf("Autonomia: ");
+                readStr(rangeStr);
+                if (strlen(rangeStr) > 0) range = atof(rangeStr);
+
+                printf("Localizacao: ");
+                readStr(location);
+                
+                editVehicle(head, typesHead, id, type, battery, range, location);
+                saveVehicles(head);
+
+                break;
+            case 3:
+                menuTitleRemoveVehicle();
+                scanf("%d", &id);
+
+                head = removeVehicle(head, id);
+                saveVehicles(head);
+
+                break;
+            default:
+                break;
+        }
+
+    } while (option != 0);
+}
+
+// Insert New Vehicle
+Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, char location[]) {
+    Vehicle *new = malloc(sizeof(struct vehicle)), *prev;
+
+    if (new != NULL) {
+        new->id = id;
+        new->type = type;
+        new->battery = battery;
+        new->range = range;
+        strcpy(new->location, location);
+        new->next = NULL;
+    }
+
+    if (head == NULL) return new;
+
+    for (prev = head; prev->next != NULL; prev = prev->next);
+
+    prev->next = new;
+
+	return head;
+}
+
+// Remove Vehicle by ID
+Vehicle* removeVehicle(Vehicle* head, int id) {
+    Vehicle *prev=head, *current=head, *aux;
+
+    if (current == NULL) {
+        return NULL;
+    } else if (current->id == id) {
+        aux = current->next;
+        free(current);
+
+        return aux;
+    } else {
+        while ((current != NULL) && (current->id != id)) {
+            prev = current;
+            current = current->next;
+        }
+        if (current == NULL) {
+            return head;
+        } else {
+            prev->next = current->next;
+            free(current);
+
+            return head;
+        }
+    }
+}
+
+// Edit Vehicle
+void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery, float range, char location[]) {
+    Vehicle* current = head;
+
+    while (current != NULL) {
+        if (current->id == id) {
+            if (type >= 0 && existType(typesHead, type)) current->type = type;
+            if (battery >= 0) current->battery = battery;
+            if (range >= 0) current->range = range;
+            if (strlen(location) > 0) strcpy(current->location, location);
+
+            break;
+        }
+
+        current = current->next;
+    }
+}
+
+// List Vehicles in Console
+int listVehicles(Vehicle* head, Type* typesHead) {
+    if (head != NULL) {
+        while (head != NULL) {
+            printf("  %06d\t%s\t\t%.1f\t\t\t%.3f\t\t\t%s\t\n", head->id, getTypeName(typesHead, head->type), head->battery, head->range, head->location);
+            head = head->next;
+        }
+
+        return 1;
+    }
+
+    return 0;
+}
+
+// Check if Vehicle ID exists
+int existVehicle(Vehicle* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return 1;
+
+        head = head->next;
+    }
+
+    return 0;
+}
+
+// Assign an ID to a Vehicle based on the last Vehicle in the list (+1)
+int assignVehicleId(Vehicle* head) {
+    while (head != NULL) {
+        if (head->next == NULL) return head->id + 1;
+
+        head = head->next;
+    }
+}
+
+// Save Vehicles in File
+int saveVehicles(Vehicle* head) {
+    FILE* fp;
+    fp = fopen("vehicles.txt", "w");
+
+    if (fp != NULL) {
+        Vehicle* aux = head;
+
+        while (aux != NULL) {
+            fprintf(fp, "%d;%d;%f;%f;%s\n", aux->id, aux->type, aux->battery, aux->range, aux->location);
+            aux = aux->next;
+        }
+
+        fclose(fp);
+
+        return 1;
+    }
+    
+    return 0;
+}
+
+// Read Vehicles from File
+Vehicle* readVehicles() {
+    FILE* fp;
+    fp = fopen("vehicles.txt", "r");
+    Vehicle* aux = NULL;
+
+    if (fp != NULL) {
+        int id, type;
+        float battery, range;
+        char location[SIZE_LOCATION];
+
+        while (!feof(fp)) { 
+            fscanf(fp, "%d;%d;%f;%f;%s\n", &id, &type, &battery, &range, &location);
+            aux = insertVehicle(aux, id, type, battery, range, location);
+        }
+
+        fclose(fp);
+    }
+
+    return aux;
+}
+
+// Get Type Name from Type ID
+char* getTypeName(Type* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->name;
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
+// Insert Type of Vehicle
+Type* insertType(Type* head, int id, char name[], float cost) {
+    Type *new = malloc(sizeof(struct type)), *prev;
+
+    if (new != NULL) {
+        new->id = id;
+        strcpy(new->name, name);
+        new->cost = cost;
+        new->next = head;
+    }
+
+    if (head == NULL) return new;
+
+    for (prev = head; prev->next != NULL; prev = prev->next);
+
+    prev->next = new;
+
+	return head;
+}
+
+// List Type of Vehicles in Console
+int listTypes(Type* head) {
+    if (head != NULL) {
+        while (head != NULL) {
+            printf("  %06d\t%s\t\t\t%.2f\t\n", head->id, head->name, head->cost);
+            head = head->next;
+        }
+
+        return 1;
+    }
+
+    return 0;
+}
+
+// Check if Type ID exists
+int existType(Type* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) {
+            return 1;
+        }
+        head = head->next;
+    }
+
+    return 0;
+}
+
+// Save Types in File
+int saveTypes(Type* head) {
+    FILE* fp;
+    fp = fopen("types.txt", "w");
+
+    if (fp != NULL) {
+        Type* aux = head;
+
+        while (aux != NULL) {
+            fprintf(fp, "%d;%s;%f\n", aux->id, aux->name, aux->cost);
+            aux = aux->next;
+        }
+
+        fclose(fp);
+
+        return 1;
+    }
+    
+    return 0;
+}
+
+// Read Types from File
+Type* readTypes() {
+    FILE* fp;
+    fp = fopen("types.txt", "r");
+    Type* aux = NULL;
+
+    if (fp != NULL) {
+        int id;
+        float cost;
+        char name[SIZE_NAME];
+
+        while (!feof(fp)) { 
+            fscanf(fp, "%d;%[^;];%f\n", &id, &name, &cost);
+            aux = insertType(aux, id, name, cost);
+        }
+
+        fclose(fp);
+    }
+
+    return aux;
+}

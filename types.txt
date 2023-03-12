@@ -1,0 +1,2 @@
+1;Trotinete;0.100000
+2;Bicicleta;0.200000
