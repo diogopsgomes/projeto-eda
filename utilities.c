@@ -16,6 +16,6 @@ void clrbuffer() {
 // Enter to continue
 void enterToContinue() {
     clrbuffer();
-    printf("Pressione a tecla enter para voltar...");
+    printf("Pressione uma tecla para voltar...");
     getchar();
 }

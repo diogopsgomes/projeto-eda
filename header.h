@@ -92,10 +92,21 @@ int saveTypes(Type* head);
 Type* readTypes();
 
 /*Managers*/
-char* getManagerName(Manager* head, int id);
+void managersMain();
 Manager* insertManager(Manager* head, int id, char username[], char password[], char name[]);
-int authManager(Manager* head, char username[], char password[]);
+Manager* removeManager(Manager* head, int id);
+void editManager(Manager* head, int id, char username[], char password[], char name[]);
+int listManagers(Manager* head);
+int existManager(Manager* head, int id);
+int assignManagerId(Manager* head);
+int saveManagers(Manager* head);
 Manager* readManagers();
+char* getManagerName(Manager* head, int id);
+
+/*Auth*/
+void encrypt(char password[]);
+void decrypt(char password[]);
+int authManager(Manager* head, char username[], char password[]);
 
 /*Menus*/
 void menuMain();
@@ -103,6 +114,7 @@ void menuAuth();
 void menuAuthClients();
 void menuAuthManagers();
 void menuHeaderVehicles();
+void menuHeaderManagers();
 void menuFooterRides();
 void menuFooterVehicles();
 void menuFooterClients();
@@ -110,6 +122,9 @@ void menuFooterManagers();
 void menuTitleInsertVehicle();
 void menuTitleRemoveVehicle();
 void menuTitleEditVehicle();
+void menuTitleInsertManager();
+void menuTitleRemoveManager();
+void menuTitleEditManager();
 
 /*Utilities*/
 void clrscr();

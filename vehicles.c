@@ -3,8 +3,7 @@
 #include <string.h>
 #include "header.h"
 
-void vehiclesMain()
-{
+void vehiclesMain() {
     int option, id, type;
     float battery, range;
     char location[SIZE_LOCATION], typeStr[SIZE_TYPE], batteryStr[SIZE_BATTERY], rangeStr[SIZE_RANGE];
@@ -16,9 +15,7 @@ void vehiclesMain()
         clrscr();
         menuHeaderVehicles();
 
-        if (listVehicles(head, typesHead) == 0) {
-            puts("\n                                        Nao existem veiculos registados!                                         \n");
-        }
+        if (listVehicles(head, typesHead) == 0) puts("\n                                        Nao existem veiculos registados!                                         \n");
 
         menuFooterVehicles();
         scanf("%d", &option);
@@ -287,6 +284,7 @@ int existType(Type* head, int id) {
         if (head->id == id) {
             return 1;
         }
+
         head = head->next;
     }
 

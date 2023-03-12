@@ -56,10 +56,18 @@ void menuHeaderVehicles() {
     puts("-----------------------------------------------------------------------------------------------------------------");
 }
 
+void menuHeaderManagers() {
+    puts("-------------------------------------------------------------------------------------------------");
+    puts("|                                           Gestores                                            |");
+    puts("-------------------------------------------------------------------------------------------------");
+    puts("| Codigo\tNome\t\t\tNome de Utilizador\t\t\t\t\t|");
+    puts("-------------------------------------------------------------------------------------------------");
+}
+
 void menuFooterRides()
 {
-    puts("----------------------------------------------------------------------------");
-    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 0 - Voltar | Escolha uma opcao: ");
+    puts("-----------------------------------------------------------------------------------------------------------------");
+    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }
 
 void menuFooterVehicles()
@@ -70,13 +78,13 @@ void menuFooterVehicles()
 
 void menuFooterClients()
 {
-    puts("----------------------------------------------------------------------------");
-    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 0 - Voltar | Escolha uma opcao: ");
+    puts("-----------------------------------------------------------------------------------------------------------------");
+    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }
 
 void menuFooterManagers() {
-    puts("----------------------------------------------------------------------------");
-    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 0 - Voltar | Escolha uma opcao: ");
+    puts("-------------------------------------------------------------------------------------------------");
+    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }
 
 void menuTitleInsertVehicle() {
@@ -93,4 +101,20 @@ void menuTitleRemoveVehicle() {
 void menuTitleEditVehicle() {
     puts("-----------------------------------------------------------------------------------------------------------------");
     printf("Codigo do veiculo a editar: ");
+}
+
+void menuTitleInsertManager() {
+    puts("----------------------------------------");
+    puts("|         Inserir novo gestor          |");
+    puts("----------------------------------------");
+}
+
+void menuTitleRemoveManager() {
+    puts("-------------------------------------------------------------------------------------------------");
+    printf("Codigo do gestor a remover: ");
+}
+
+void menuTitleEditManager() {
+    puts("-------------------------------------------------------------------------------------------------");
+    printf("Codigo do gestor a editar: ");
 }

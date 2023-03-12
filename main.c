@@ -30,16 +30,20 @@ int main() {
                     switch (optionB) {
                         case 1:
                             clrscr();
-                            printf("Utilizador: ");
+                            printf("Nome de Utilizador: ");
                             clrbuffer();
                             fgets(username, sizeof(username), stdin);
                             username[strcspn(username, "\n")] = 0;
-                            printf("Password: ");
+                            printf("Palavra-passe: ");
                             clrbuffer();
                             fgets(password, sizeof(password), stdin);
                             password[strcspn(password, "\n")] = 0;
 
-                            if ((user = authManager(head, username, password)) <= 0) break;
+                            if ((user = authManager(head, username, password)) <= 0) {
+                                puts("\nO nome de utilizador ou palavra-passe estao incorretos.\n");
+                                enterToContinue();
+                                break;
+                            }
 
                             do {
                                 clrscr();
@@ -58,7 +62,7 @@ int main() {
                                         
                                         break;
                                     case 4:
-
+                                        managersMain();
                                         break;
                                     default:
                                         break;
