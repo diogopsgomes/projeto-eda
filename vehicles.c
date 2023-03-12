@@ -34,7 +34,9 @@ void vehiclesMain()
                 printf("Autonomia: ");
                 scanf("%f", &range);
                 printf("Localizacao: ");
-                readStr(location);
+                clrbuffer();
+                fgets(location, sizeof(location), stdin);
+                location[strcspn(location, "\n")] = 0;
 
                 head = insertVehicle(head, assignVehicleId(head), type, battery, range, location);
                 saveVehicles(head);
@@ -49,19 +51,27 @@ void vehiclesMain()
                 type = battery = range = -1;
 
                 printf("Tipo: ");
-                readStr(typeStr);
+                clrbuffer();
+                fgets(typeStr, sizeof(typeStr), stdin);
+                typeStr[strcspn(typeStr, "\n")] = 0;
                 if (strlen(typeStr) > 0) type = atoi(typeStr);
 
                 printf("Bateria: ");
-                readStr(batteryStr);
+                clrbuffer();
+                fgets(batteryStr, sizeof(batteryStr), stdin);
+                batteryStr[strcspn(batteryStr, "\n")] = 0;
                 if (strlen(batteryStr) > 0) battery = atof(batteryStr);
 
                 printf("Autonomia: ");
-                readStr(rangeStr);
+                clrbuffer();
+                fgets(rangeStr, sizeof(rangeStr), stdin);
+                rangeStr[strcspn(rangeStr, "\n")] = 0;
                 if (strlen(rangeStr) > 0) range = atof(rangeStr);
 
                 printf("Localizacao: ");
-                readStr(location);
+                clrbuffer();
+                fgets(location, sizeof(location), stdin);
+                location[strcspn(location, "\n")] = 0;
                 
                 editVehicle(head, typesHead, id, type, battery, range, location);
                 saveVehicles(head);

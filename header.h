@@ -115,6 +115,5 @@ void menuTitleEditVehicle();
 void clrscr();
 void clrbuffer();
 void enterToContinue();
-void readStr(char* str);
 
 #endif

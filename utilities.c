@@ -3,27 +3,19 @@
 #include <string.h>
 #include "header.h"
 
-void clrscr() // Clear console
-{
+// Clear console
+void clrscr() {
     system("@cls||clear");
 }
 
-void clrbuffer() // Clear standard input (keyboard) buffer
-{
+// Clear standard input (keyboard) buffer
+void clrbuffer() {
     fflush(stdin);
 }
 
-void enterToContinue() // Enter to continue
-{
+// Enter to continue
+void enterToContinue() {
     clrbuffer();
     printf("Pressione a tecla enter para voltar...");
     getchar();
-}
-
-void readStr(char* str) {
-    clrbuffer();
-    scanf("%s", str);
-    //scanf("%[^\n]", str);
-    /* fgets(str, sizeof(str), stdin);
-    str[strcspn(str, "\n")] = 0; */
 }

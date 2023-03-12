@@ -31,9 +31,13 @@ int main() {
                         case 1:
                             clrscr();
                             printf("Utilizador: ");
-                            readStr(username);
+                            clrbuffer();
+                            fgets(username, sizeof(username), stdin);
+                            username[strcspn(username, "\n")] = 0;
                             printf("Password: ");
-                            readStr(password);
+                            clrbuffer();
+                            fgets(password, sizeof(password), stdin);
+                            password[strcspn(password, "\n")] = 0;
 
                             if ((user = authManager(head, username, password)) <= 0) break;
 
