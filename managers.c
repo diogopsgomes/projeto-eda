@@ -22,14 +22,17 @@ void managersMain() {
             case 1:
                 clrscr();
                 menuTitleInsertManager();
+
                 printf("Nome: ");
                 clrbuffer();
                 fgets(name, sizeof(name), stdin);
                 name[strcspn(name, "\n")] = 0;
+
                 printf("Nome de Utilizador: ");
                 clrbuffer();
                 fgets(username, sizeof(username), stdin);
                 username[strcspn(username, "\n")] = 0;
+                
                 printf("Palavra-passe: ");
                 clrbuffer();
                 fgets(password, sizeof(password), stdin);
@@ -161,6 +164,17 @@ int listManagers(Manager* head) {
     return 0;
 }
 
+// Get Manager Name from Manager ID
+char* getManagerName(Manager* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->name;
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
 // Check if Manager ID exists
 int existManager(Manager* head, int id) {
     while (head != NULL) {
@@ -221,15 +235,4 @@ Manager* readManagers() {
     }
 
     return aux;
-}
-
-// Get Manager Name from Manager ID
-char* getManagerName(Manager* head, int id) {
-    while (head != NULL) {
-        if (head->id == id) return head->name;
-
-        head = head->next;
-    }
-
-    return "*********";
 }

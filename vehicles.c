@@ -24,12 +24,16 @@ void vehiclesMain() {
             case 1:
                 clrscr();
                 menuTitleInsertVehicle();
+
                 printf("Tipo: ");
                 scanf("%d", &type);
+
                 printf("Bateria: ");
                 scanf("%f", &battery);
+
                 printf("Autonomia: ");
                 scanf("%f", &range);
+                
                 printf("Localizacao: ");
                 clrbuffer();
                 fgets(location, sizeof(location), stdin);

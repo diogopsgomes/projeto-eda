@@ -97,11 +97,11 @@ Manager* insertManager(Manager* head, int id, char username[], char password[], 
 Manager* removeManager(Manager* head, int id);
 void editManager(Manager* head, int id, char username[], char password[], char name[]);
 int listManagers(Manager* head);
+char* getManagerName(Manager* head, int id);
 int existManager(Manager* head, int id);
 int assignManagerId(Manager* head);
 int saveManagers(Manager* head);
 Manager* readManagers();
-char* getManagerName(Manager* head, int id);
 
 /*Auth*/
 void encrypt(char password[]);
