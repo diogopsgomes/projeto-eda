@@ -3,25 +3,26 @@
 #include <string.h>
 #include "header.h"
 
-void managersMain() {
-    int option, id;
-    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
+void clientsMain() {
+    int option, id, nif;
+    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
+    float balance;
 
     do {
-        Manager* head = readManagers();
+        Client* head = readClients();
 
         clrscr();
-        menuHeaderManagers();
+        menuHeaderClients();
 
-        if (listManagers(head) == 0) puts("\n                                        Nao existem gestores registados!                                         \n");
+        if (listClients(head) == 0) puts("\n                                        Nao existem clientes registados!                                         \n");
 
-        menuFooterManagers();
+        menuFooterClients();
         scanf("%d", &option);
 
         switch (option) {
             case 1:
                 clrscr();
-                menuTitleInsertManager();
+                menuTitleInsertClient();
 
                 printf("Nome: ");
                 clrbuffer();
@@ -39,15 +40,23 @@ void managersMain() {
                 password[strcspn(password, "\n")] = 0;
                 encrypt(password);
 
-                head = insertManager(head, assignManagerId(head), username, password, name);
-                saveManagers(head);
+                printf("NIF: ");
+                scanf("%d", &nif);
+
+                printf("Morada: ");
+                clrbuffer();
+                fgets(address, sizeof(address), stdin);
+                address[strcspn(address, "\n")] = 0;
+
+                head = insertClient(head, assignClientId(head), username, password, name, nif, address, 0);
+                saveClients(head);
 
                 break;
             case 2:
-                menuTitleEditManager();
+                menuTitleEditClient();
                 scanf("%d", &id);
 
-                if (!existManager(head, id)) break;
+                if (!existClient(head, id)) break;
 
                 printf("Nome: ");
                 clrbuffer();
@@ -64,17 +73,27 @@ void managersMain() {
                 fgets(password, sizeof(password), stdin);
                 password[strcspn(password, "\n")] = 0;
                 encrypt(password);
+
+                printf("NIF: ");
+                clrbuffer();
+                fgets(nifStr, sizeof(nifStr), stdin);
+                nifStr[strcspn(nifStr, "\n")] = 0;
+
+                printf("Morada: ");
+                clrbuffer();
+                fgets(address, sizeof(address), stdin);
+                address[strcspn(address, "\n")] = 0;
                 
-                editManager(head, id, username, password, name);
-                saveManagers(head);
+                editClient(head, id, username, password, name, nif, address);
+                saveClients(head);
 
                 break;
             case 3:
-                menuTitleRemoveManager();
+                menuTitleRemoveClient();
                 scanf("%d", &id);
 
-                head = removeManager(head, id);
-                saveManagers(head);
+                head = removeClient(head, id);
+                saveClients(head);
 
                 break;
             default:
@@ -84,15 +103,18 @@ void managersMain() {
     } while (option != 0);
 }
 
-// Insert New Manager
-Manager* insertManager(Manager* head, int id, char username[], char password[], char name[]) {
-    Manager *new = malloc(sizeof(struct manager)), *prev;
+// Insert New Client
+Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance) {
+    Client *new = malloc(sizeof(struct client)), *prev;
 
     if (new != NULL) {
         new->id = id;
         strcpy(new->username, username);
         strcpy(new->password, password);
         strcpy(new->name, name);
+        new->nif = nif;
+        strcpy(new->address, address);
+        new->balance = balance;
         new->next = NULL;
     }
 
@@ -105,9 +127,9 @@ Manager* insertManager(Manager* head, int id, char username[], char password[], 
 	return head;
 }
 
-// Remove Manager by ID
-Manager* removeManager(Manager* head, int id) {
-    Manager *prev=head, *current=head, *aux;
+// Remove Client by ID
+Client* removeClient(Client* head, int id) {
+    Client *prev=head, *current=head, *aux;
 
     if (current == NULL) {
         return NULL;
@@ -132,15 +154,17 @@ Manager* removeManager(Manager* head, int id) {
     }
 }
 
-// Edit Manager
-void editManager(Manager* head, int id, char username[], char password[], char name[]) {
-    Manager* current = head;
+// Edit Client
+void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]) {
+    Client* current = head;
 
     while (current != NULL) {
         if (current->id == id) {
             if (strlen(username) > 0) strcpy(current->username, username);
             if (strlen(password) > 0) strcpy(current->password, password);
             if (strlen(name) > 0) strcpy(current->name, name);
+            if (nif >= 0) current->nif = nif;
+            if (strlen(address) > 0) strcpy(current->address, address);
 
             break;
         }
@@ -149,11 +173,11 @@ void editManager(Manager* head, int id, char username[], char password[], char n
     }
 }
 
-// List Managers in Console
-int listManagers(Manager* head) {
+// List Clients in Console
+int listClients(Client* head) {
     if (head != NULL) {
         while (head != NULL) {
-            printf("  %06d\t%-25s\t%-25s\t\n", head->id, head->name, head->username);
+            printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->address);
 
             head = head->next;
         }
@@ -164,8 +188,8 @@ int listManagers(Manager* head) {
     return 0;
 }
 
-// Get Manager Name from Manager ID
-char* getManagerName(Manager* head, int id) {
+// Get Client Name from Client ID
+char* getClientName(Client* head, int id) {
     while (head != NULL) {
         if (head->id == id) return head->name;
 
@@ -175,8 +199,8 @@ char* getManagerName(Manager* head, int id) {
     return "*********";
 }
 
-// Check if Manager ID exists
-int existManager(Manager* head, int id) {
+// Check if Client ID exists
+int existClient(Client* head, int id) {
     while (head != NULL) {
         if (head->id == id) return 1;
 
@@ -186,27 +210,34 @@ int existManager(Manager* head, int id) {
     return 0;
 }
 
-// Assign an ID to a Manager based on the last Manager in the list (+1)
-int assignManagerId(Manager* head) {
+// Assign an ID to a Client based on the last Client in the list (+1)
+int assignClientId(Client* head) {
     while (head != NULL) {
         if (head->next == NULL) return head->id + 1;
 
         head = head->next;
     }
-
-    return 1;
 }
 
-// Save Managers in File
-int saveManagers(Manager* head) {
+// Update Client Balance
+void updateBalance(Client* head, int id, float balance) {
+    while (head != NULL) {
+        if (head->id == id) head->balance = balance;
+        
+        head = head->next;
+    }
+}
+
+// Save Clients in File
+int saveClients(Client* head) {
     FILE* fp;
-    fp = fopen("managers.txt", "w");
+    fp = fopen("clients.txt", "w");
 
     if (fp != NULL) {
-        Manager* aux = head;
+        Client* aux = head;
 
         while (aux != NULL) {
-            fprintf(fp, "%d;%s;%s;%s\n", aux->id, aux->username, aux->password, aux->name);
+            fprintf(fp, "%d;%s;%s;%s;%d;%s;%f\n", aux->id, aux->username, aux->password, aux->name, aux->nif, aux->address, aux->balance);
             aux = aux->next;
         }
 
@@ -218,19 +249,20 @@ int saveManagers(Manager* head) {
     return 0;
 }
 
-// Read Managers from File
-Manager* readManagers() {
+// Read Clients from File
+Client* readClients() {
     FILE* fp;
-    fp = fopen("managers.txt", "r");
-    Manager* aux = NULL;
+    fp = fopen("clients.txt", "r");
+    Client* aux = NULL;
 
     if (fp != NULL) {
-        int id;
-        char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
+        int id, nif;
+        char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
+        float balance;
 
         while (!feof(fp)) { 
-            fscanf(fp, "%d;%[^;];%[^;];%[^\n]\n", &id, &username, &password, &name);
-            aux = insertManager(aux, id, username, password, name);
+            fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f\n", &id, &username, &password, &name, &nif, &address, &balance);
+            aux = insertClient(aux, id, username, password, name, nif, address, balance);
         }
 
         fclose(fp);

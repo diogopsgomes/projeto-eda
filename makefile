@@ -1,13 +1,16 @@
 all: prog
 
-prog: main.o vehicles.o managers.o auth.o menus.o utilities.o
-	gcc -g -o prog main.o vehicles.o managers.o auth.o menus.o utilities.o
+prog: main.o vehicles.o clients.o managers.o auth.o menus.o utilities.o
+	gcc -g -o prog main.o vehicles.o clients.o managers.o auth.o menus.o utilities.o
 
 main.o: main.c
 	gcc -g -o main.o main.c -c
 
 vehicles.o: vehicles.c header.h
 	gcc -g -o vehicles.o vehicles.c -c
+
+clients.o: clients.c header.h
+	gcc -g -o clients.o clients.c -c
 
 managers.o: managers.c header.h
 	gcc -g -o managers.o managers.c -c

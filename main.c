@@ -30,20 +30,22 @@ int main() {
                     switch (optionB) {
                         case 1:
                             clrscr();
-                            printf("Nome de Utilizador: ");
-                            clrbuffer();
-                            fgets(username, sizeof(username), stdin);
-                            username[strcspn(username, "\n")] = 0;
-                            printf("Palavra-passe: ");
-                            clrbuffer();
-                            fgets(password, sizeof(password), stdin);
-                            password[strcspn(password, "\n")] = 0;
 
-                            if ((user = authManager(head, username, password)) <= 0) {
-                                puts("\nO nome de utilizador ou palavra-passe estao incorretos.\n");
-                                enterToContinue();
-                                break;
-                            }
+                            // printf("Nome de Utilizador: ");
+                            // clrbuffer();
+                            // fgets(username, sizeof(username), stdin);
+                            // username[strcspn(username, "\n")] = 0;
+
+                            // printf("Palavra-passe: ");
+                            // clrbuffer();
+                            // fgets(password, sizeof(password), stdin);
+                            // password[strcspn(password, "\n")] = 0;
+
+                            // if ((user = authManager(head, username, password)) <= 0) {
+                            //     puts("\nO nome de utilizador ou palavra-passe estao incorretos.\n");
+                            //     enterToContinue();
+                            //     break;
+                            // }
 
                             do {
                                 clrscr();
@@ -59,7 +61,7 @@ int main() {
                                         vehiclesMain();
                                         break;
                                     case 3:
-                                        
+                                        clientsMain();
                                         break;
                                     case 4:
                                         managersMain();

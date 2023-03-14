@@ -11,6 +11,17 @@
 #define SIZE_BATTERY 15
 #define SIZE_RANGE 15
 
+#define SIZE_NIF 15
+
+#define RED     "\x1B[31m"
+#define GREEN   "\x1B[32m"
+#define YELLOW  "\x1B[33m"
+#define BLUE    "\x1B[34m"
+#define MAGENTA "\x1B[35m"
+#define CYAN    "\x1B[36m"
+#define WHITE   "\x1B[37m"
+#define RESET   "\x1B[0m"
+
 typedef struct datetime {
     int day;
     int month;
@@ -91,6 +102,19 @@ int existType(Type* head, int id);
 int saveTypes(Type* head);
 Type* readTypes();
 
+/*Clients*/
+void clientsMain();
+Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance);
+Client* removeClient(Client* head, int id);
+void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]);
+int listClients(Client* head);
+char* getClientName(Client* head, int id);
+int existClient(Client* head, int id);
+int assignClientId(Client* head);
+void updateBalance(Client* head, int id, float balance);
+int saveClients(Client* head);
+Client* readClients();
+
 /*Managers*/
 void managersMain();
 Manager* insertManager(Manager* head, int id, char username[], char password[], char name[]);
@@ -114,6 +138,7 @@ void menuAuth();
 void menuAuthClients();
 void menuAuthManagers();
 void menuHeaderVehicles();
+void menuHeaderClients();
 void menuHeaderManagers();
 void menuFooterRides();
 void menuFooterVehicles();
@@ -122,6 +147,9 @@ void menuFooterManagers();
 void menuTitleInsertVehicle();
 void menuTitleRemoveVehicle();
 void menuTitleEditVehicle();
+void menuTitleInsertClient();
+void menuTitleRemoveClient();
+void menuTitleEditClient();
 void menuTitleInsertManager();
 void menuTitleRemoveManager();
 void menuTitleEditManager();
