@@ -4,7 +4,7 @@
 #include "header.h"
 
 void clientsMain() {
-    int option, id, nif;
+    int option, id, nif, count;
     char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
     float balance;
 
@@ -14,7 +14,12 @@ void clientsMain() {
         clrscr();
         menuHeaderClients();
 
-        if (listClients(head) == 0) puts("\n                                        Nao existem clientes registados!                                         \n");
+        if ((count = listClients(head)) == 0) {
+            puts("\n                                                        Nao existem clientes registados!                                                         \n");
+        } else {
+            puts("");
+            showCount(count);
+        }
 
         menuFooterClients();
         scanf("%d", &option);

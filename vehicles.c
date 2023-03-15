@@ -4,7 +4,7 @@
 #include "header.h"
 
 void vehiclesMain() {
-    int option, id, type;
+    int option, id, type, count;
     float battery, range;
     char location[SIZE_LOCATION], typeStr[SIZE_TYPE], batteryStr[SIZE_BATTERY], rangeStr[SIZE_RANGE];
 
@@ -15,7 +15,12 @@ void vehiclesMain() {
         clrscr();
         menuHeaderVehicles();
 
-        if (listVehicles(head, typesHead) == 0) puts("\n                                        Nao existem veiculos registados!                                         \n");
+        if ((count = listVehicles(head, typesHead)) == 0) {
+            puts("\n                                            Nao existem veiculos registados!                                             \n");
+        } else {
+            puts("");
+            showCount(count);
+        }
 
         menuFooterVehicles();
         scanf("%d", &option);
@@ -85,6 +90,17 @@ void vehiclesMain() {
                 head = removeVehicle(head, id);
                 saveVehicles(head);
 
+                break;
+            case 4:
+                clrscr();
+                menuHeaderVehicles();
+                count = listVehiclesByRangeOrderedDesc(head, typesHead);
+                puts("");
+                showCount(count);
+                puts("");
+                enterToContinue();
+                break;
+            case 5:
                 break;
             default:
                 break;
@@ -162,16 +178,50 @@ void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery
 
 // List Vehicles in Console
 int listVehicles(Vehicle* head, Type* typesHead) {
-    if (head != NULL) {
-        while (head != NULL) {
-            printf("  %06d\t%s\t\t%.1f\t\t\t%.3f\t\t\t%s\t\n", head->id, getTypeName(typesHead, head->type), head->battery, head->range, head->location);
-            head = head->next;
-        }
+    int count = 0;
+    
+    while (head != NULL) {
+        printf("  %06d\t%s\t\t%.1f\t\t\t%.3f\t\t\t%s\t\n", head->id, getTypeName(typesHead, head->type), head->battery, head->range, head->location);
 
-        return 1;
+        count++;
+        
+        head = head->next;
     }
 
-    return 0;
+    return count;
+}
+
+// List Vehicles in Console Ordered by Range (Descending)
+int listVehiclesByRangeOrderedDesc(Vehicle* head, Type* typesHead) {
+    int swapped;
+
+    do {
+        Vehicle* prev = NULL;
+        Vehicle* current = head;
+        swapped = 0;
+
+        while (current->next != NULL) {
+            if (current->range < current->next->range) {
+                Vehicle* next = current->next;
+                current->next = next->next;
+                next->next = current;
+
+                if (prev != NULL) {
+                    prev->next = next;
+                } else {
+                    head = next;
+                }
+
+                prev = next;
+                swapped = 1;
+            } else {
+                prev = current;
+                current = current->next;
+            }
+        }
+    } while (swapped);
+
+    return listVehicles(head, typesHead);
 }
 
 // Check if Vehicle ID exists

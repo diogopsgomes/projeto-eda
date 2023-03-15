@@ -4,7 +4,7 @@
 #include "header.h"
 
 void managersMain() {
-    int option, id;
+    int option, id, count;
     char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
 
     do {
@@ -13,7 +13,12 @@ void managersMain() {
         clrscr();
         menuHeaderManagers();
 
-        if (listManagers(head) == 0) puts("\n                                        Nao existem gestores registados!                                         \n");
+        if ((count = listManagers(head)) == 0) {
+            puts("\n                                Nao existem gestores registados!                                 \n");
+        } else {
+            puts("");
+            showCount(count);
+        }
 
         menuFooterManagers();
         scanf("%d", &option);

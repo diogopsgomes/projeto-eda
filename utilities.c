@@ -19,3 +19,12 @@ void enterToContinue() {
     printf("Pressione uma tecla para voltar...");
     getchar();
 }
+
+// Show the amount of results displayed
+void showCount(int count) {
+    if (count != 1) {
+        printf("A mostrar %d resultados.\n", count);
+    } else {
+        printf("A mostrar %d resultado.\n", count);
+    }
+}

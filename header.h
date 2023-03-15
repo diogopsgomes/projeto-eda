@@ -91,6 +91,7 @@ Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float ran
 Vehicle* removeVehicle(Vehicle* head, int id);
 void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery, float range, char location[]);
 int listVehicles(Vehicle* head, Type* typesHead);
+int listVehiclesByRangeOrderedDesc(Vehicle* head, Type* typesHead);
 int existVehicle(Vehicle* head, int id);
 int assignVehicleId(Vehicle* head);
 int saveVehicles(Vehicle* head);
@@ -133,6 +134,7 @@ void decrypt(char password[]);
 int authManager(Manager* head, char username[], char password[]);
 
 /*Menus*/
+void showCount(int count);
 void menuMain();
 void menuAuth();
 void menuAuthClients();
