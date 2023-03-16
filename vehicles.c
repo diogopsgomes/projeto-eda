@@ -160,19 +160,17 @@ Vehicle* removeVehicle(Vehicle* head, int id) {
 
 // Edit Vehicle
 void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery, float range, char location[]) {
-    Vehicle* current = head;
-
-    while (current != NULL) {
-        if (current->id == id) {
-            if (type >= 0 && existType(typesHead, type)) current->type = type;
-            if (battery >= 0) current->battery = battery;
-            if (range >= 0) current->range = range;
-            if (strlen(location) > 0) strcpy(current->location, location);
+    while (head != NULL) {
+        if (head->id == id) {
+            if (type >= 0 && existType(typesHead, type)) head->type = type;
+            if (battery >= 0) head->battery = battery;
+            if (range >= 0) head->range = range;
+            if (strlen(location) > 0) strcpy(head->location, location);
 
             break;
         }
 
-        current = current->next;
+        head = head->next;
     }
 }
 
@@ -242,6 +240,8 @@ int assignVehicleId(Vehicle* head) {
 
         head = head->next;
     }
+
+    return 1;
 }
 
 // Save Vehicles in File

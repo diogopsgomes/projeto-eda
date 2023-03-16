@@ -63,6 +63,8 @@ void clientsMain() {
 
                 if (!existClient(head, id)) break;
 
+                nif = -1;
+
                 printf("Nome: ");
                 clrbuffer();
                 fgets(name, sizeof(name), stdin);
@@ -83,6 +85,7 @@ void clientsMain() {
                 clrbuffer();
                 fgets(nifStr, sizeof(nifStr), stdin);
                 nifStr[strcspn(nifStr, "\n")] = 0;
+                if (strlen(nifStr) > 0) nif = atoi(nifStr);
 
                 printf("Morada: ");
                 clrbuffer();
@@ -98,6 +101,32 @@ void clientsMain() {
                 scanf("%d", &id);
 
                 head = removeClient(head, id);
+                saveClients(head);
+
+                break;
+            case 4:
+                menuTitleAddBalance();
+                scanf("%d", &id);
+
+                if (!existClient(head, id)) break;
+
+                printf("Montante: ");
+                scanf("%f", &balance);
+
+                addBalance(head, id, balance);
+                saveClients(head);
+                
+                break;
+            case 5:
+                menuTitleRemoveBalance();
+                scanf("%d", &id);
+
+                if (!existClient(head, id)) break;
+
+                printf("Montante: ");
+                scanf("%f", &balance);
+
+                removeBalance(head, id, balance);
                 saveClients(head);
 
                 break;
@@ -161,20 +190,18 @@ Client* removeClient(Client* head, int id) {
 
 // Edit Client
 void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]) {
-    Client* current = head;
-
-    while (current != NULL) {
-        if (current->id == id) {
-            if (strlen(username) > 0) strcpy(current->username, username);
-            if (strlen(password) > 0) strcpy(current->password, password);
-            if (strlen(name) > 0) strcpy(current->name, name);
-            if (nif >= 0) current->nif = nif;
-            if (strlen(address) > 0) strcpy(current->address, address);
+    while (head != NULL) {
+        if (head->id == id) {
+            if (strlen(username) > 0) strcpy(head->username, username);
+            if (strlen(password) > 0) strcpy(head->password, password);
+            if (strlen(name) > 0) strcpy(head->name, name);
+            if (nif >= 0) head->nif = nif;
+            if (strlen(address) > 0) strcpy(head->address, address);
 
             break;
         }
 
-        current = current->next;
+        head = head->next;
     }
 }
 
@@ -222,10 +249,36 @@ int assignClientId(Client* head) {
 
         head = head->next;
     }
+
+    return 1;
+}
+
+// Add a given amount to Client Balance
+void addBalance(Client* head, int id, float balance) {
+    while (head != NULL) {
+        if (head->id == id) head->balance += balance;
+        
+        head = head->next;
+    }
+}
+
+// Remove a given amount from Client Balance
+void removeBalance(Client* head, int id, float balance) {
+    while (head != NULL) {
+        if (head->id == id) {
+            if (head->balance > balance) {
+                head->balance -= balance;
+            } else {
+                head->balance = 0;
+            }
+        }
+        
+        head = head->next;
+    }
 }
 
 // Update Client Balance
-void updateBalance(Client* head, int id, float balance) {
+void editBalance(Client* head, int id, float balance) {
     while (head != NULL) {
         if (head->id == id) head->balance = balance;
         
@@ -261,6 +314,14 @@ Client* readClients() {
     Client* aux = NULL;
 
     if (fp != NULL) {
+        int c = fgetc(fp);
+        if (c == EOF) {
+            printf("Error: file is empty.\n");
+            fclose(fp);
+            return NULL;
+        }
+        ungetc(c, fp);
+
         int id, nif;
         char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
         float balance;

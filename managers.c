@@ -139,18 +139,16 @@ Manager* removeManager(Manager* head, int id) {
 
 // Edit Manager
 void editManager(Manager* head, int id, char username[], char password[], char name[]) {
-    Manager* current = head;
-
-    while (current != NULL) {
-        if (current->id == id) {
-            if (strlen(username) > 0) strcpy(current->username, username);
-            if (strlen(password) > 0) strcpy(current->password, password);
-            if (strlen(name) > 0) strcpy(current->name, name);
+    while (head != NULL) {
+        if (head->id == id) {
+            if (strlen(username) > 0) strcpy(head->username, username);
+            if (strlen(password) > 0) strcpy(head->password, password);
+            if (strlen(name) > 0) strcpy(head->name, name);
 
             break;
         }
 
-        current = current->next;
+        head = head->next;
     }
 }
 

@@ -49,7 +49,7 @@ int main() {
 
                             do {
                                 clrscr();
-                                printf("Ola, %s!\n", getManagerName(head, user));
+                                printf("Ola, %s!\n\n", getManagerName(head, user));
                                 menuMain();
                                 scanf("%d", &optionC);
 

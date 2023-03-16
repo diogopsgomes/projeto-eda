@@ -87,7 +87,7 @@ void menuFooterVehicles()
 void menuFooterClients()
 {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
-    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
+    printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Adicionar Saldo | 5 - Remover Saldo | 0 - Voltar | Escolha uma opcao: ");
 }
 
 void menuFooterManagers() {
@@ -125,6 +125,16 @@ void menuTitleRemoveClient() {
 void menuTitleEditClient() {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
     printf("Codigo do cliente a editar: ");
+}
+
+void menuTitleAddBalance() {
+    puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
+    printf("Codigo do cliente a adicionar saldo: ");
+}
+
+void menuTitleRemoveBalance() {
+    puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
+    printf("Codigo do cliente a remover saldo: ");
 }
 
 void menuTitleInsertManager() {

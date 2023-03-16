@@ -1,1 +1,2 @@
-0;diogopsgomes;eLgKfM;Diogo Pedro Silva Gomes;258380519;Rua da Povoa, 2;0.000000
+1;diogopsgomes;eLgKfM;Diogo Gomes;258380519;Rua da Povoa, 2;118.000000
+2;lxstmind;eLgKfM;Joao Marcelo;123123123;Longos;40.000000
