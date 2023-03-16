@@ -16,7 +16,7 @@ void vehiclesMain() {
         menuHeaderVehicles();
 
         if ((count = listVehicles(head, typesHead)) == 0) {
-            puts("\n                                            Nao existem veiculos registados!                                             \n");
+            puts("\n                                                    Nao existem veiculos registados!                                                     \n");
         } else {
             puts("");
             showCount(count);
@@ -94,13 +94,32 @@ void vehiclesMain() {
             case 4:
                 clrscr();
                 menuHeaderVehicles();
-                count = listVehiclesByRangeOrderedDesc(head, typesHead);
+                count = listVehiclesByRange(head, typesHead);
                 puts("");
                 showCount(count);
                 puts("");
                 enterToContinue();
+
                 break;
             case 5:
+                menuTitleListVehiclesByLocation();
+                clrbuffer();
+                fgets(location, sizeof(location), stdin);
+                location[strcspn(location, "\n")] = 0;
+
+                clrscr();
+                menuHeaderVehicles();
+
+                if ((count = listVehiclesByLocation(head, typesHead, location)) == 0) {
+                    puts("\n                                                 Nao existem veiculos nessa localizacao!                                                 \n");
+                } else {
+                    puts("");
+                    showCount(count);
+                }
+
+                puts("");
+                enterToContinue();
+
                 break;
             default:
                 break;
@@ -179,7 +198,7 @@ int listVehicles(Vehicle* head, Type* typesHead) {
     int count = 0;
     
     while (head != NULL) {
-        printf("  %06d\t%s\t\t%.1f\t\t\t%.3f\t\t\t%s\t\n", head->id, getTypeName(typesHead, head->type), head->battery, head->range, head->location);
+        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%s\n", head->id, getTypeName(typesHead, head->type), head->battery, head->range, head->location);
 
         count++;
         
@@ -190,36 +209,52 @@ int listVehicles(Vehicle* head, Type* typesHead) {
 }
 
 // List Vehicles in Console Ordered by Range (Descending)
-int listVehiclesByRangeOrderedDesc(Vehicle* head, Type* typesHead) {
+int listVehiclesByRange(Vehicle* head, Type* typesHead) {
     int swapped;
 
-    do {
-        Vehicle* prev = NULL;
-        Vehicle* current = head;
-        swapped = 0;
+    if (head != NULL) {
+        do {
+            Vehicle* prev = NULL;
+            Vehicle* current = head;
+            swapped = 0;
 
-        while (current->next != NULL) {
-            if (current->range < current->next->range) {
-                Vehicle* next = current->next;
-                current->next = next->next;
-                next->next = current;
+            while (current->next != NULL) {
+                if (current->range < current->next->range) {
+                    Vehicle* next = current->next;
+                    current->next = next->next;
+                    next->next = current;
 
-                if (prev != NULL) {
-                    prev->next = next;
+                    if (prev != NULL) {
+                        prev->next = next;
+                    } else {
+                        head = next;
+                    }
+
+                    prev = next;
+                    swapped = 1;
                 } else {
-                    head = next;
+                    prev = current;
+                    current = current->next;
                 }
-
-                prev = next;
-                swapped = 1;
-            } else {
-                prev = current;
-                current = current->next;
             }
-        }
-    } while (swapped);
+        } while (swapped);
+    }
 
     return listVehicles(head, typesHead);
+}
+
+int listVehiclesByLocation(Vehicle* head, Type* typesHead, char location[]) {
+    Vehicle* filtered = NULL;
+
+    while (head != NULL) {
+        if (strcmp(head->location, location) == 0) {
+            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->location);
+        }
+
+        head = head->next;
+    }
+    
+    return listVehiclesByRange(filtered, typesHead);
 }
 
 // Check if Vehicle ID exists

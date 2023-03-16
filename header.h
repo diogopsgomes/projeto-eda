@@ -91,7 +91,8 @@ Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float ran
 Vehicle* removeVehicle(Vehicle* head, int id);
 void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery, float range, char location[]);
 int listVehicles(Vehicle* head, Type* typesHead);
-int listVehiclesByRangeOrderedDesc(Vehicle* head, Type* typesHead);
+int listVehiclesByRange(Vehicle* head, Type* typesHead);
+int listVehiclesByLocation(Vehicle* head, Type* typesHead, char location[]);
 int existVehicle(Vehicle* head, int id);
 int assignVehicleId(Vehicle* head);
 int saveVehicles(Vehicle* head);
@@ -151,6 +152,7 @@ void menuFooterManagers();
 void menuTitleInsertVehicle();
 void menuTitleRemoveVehicle();
 void menuTitleEditVehicle();
+void menuTitleListVehiclesByLocation();
 void menuTitleInsertClient();
 void menuTitleRemoveClient();
 void menuTitleEditClient();
