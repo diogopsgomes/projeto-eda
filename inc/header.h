@@ -139,6 +139,7 @@ void decrypt(char password[]);
 int authManager(Manager* head, char username[], char password[]);
 
 /*Menus*/
+void menuApp();
 void menuMain();
 void menuAuth();
 void menuAuthClients();

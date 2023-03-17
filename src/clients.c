@@ -328,7 +328,7 @@ Client* readClients() {
     char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
     float balance;
 
-    while (!feof(fp)) { 
+    while (!feof(fp)) {
         fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f\n", &id, &username, &password, &name, &nif, &address, &balance);
         aux = insertClient(aux, id, username, password, name, nif, address, balance);
     }

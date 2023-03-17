@@ -321,7 +321,7 @@ Vehicle* readVehicles() {
     float battery, range;
     char location[SIZE_LOCATION];
 
-    while (!feof(fp)) { 
+    while (!feof(fp)) {
         fscanf(fp, "%d;%d;%f;%f;%s\n", &id, &type, &battery, &range, &location);
         aux = insertVehicle(aux, id, type, battery, range, location);
     }

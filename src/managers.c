@@ -241,7 +241,7 @@ Manager* readManagers() {
     int id;
     char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
 
-    while (!feof(fp)) { 
+    while (!feof(fp)) {
         fscanf(fp, "%d;%[^;];%[^;];%[^\n]\n", &id, &username, &password, &name);
         aux = insertManager(aux, id, username, password, name);
     }

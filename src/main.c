@@ -9,12 +9,14 @@ int main() {
 
     do {
         clrscr();
+        menuApp();
         menuAuth();
         scanf("%d", &optionA);
 
         switch (optionA) {
             case 1:
                 clrscr();
+                menuApp();
                 menuAuthClients();
                 scanf("%d", &optionB);
 
@@ -24,6 +26,7 @@ int main() {
                     Manager* head = readManagers();
 
                     clrscr();
+                    menuApp();
                     menuAuthManagers();
                     scanf("%d", &optionB);
 
@@ -49,6 +52,7 @@ int main() {
 
                             do {
                                 clrscr();
+                                menuApp();
                                 printf("Ola, %s!\n\n", getManagerName(head, user));
                                 menuMain();
                                 scanf("%d", &optionC);
