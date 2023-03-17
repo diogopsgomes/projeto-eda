@@ -4,8 +4,12 @@
 #include "../inc/header.h"
 
 int main() {
-    int optionA, optionB, optionC, count, user;
-    char username[SIZE_USERNAME], password[SIZE_PASSWORD];
+    Vehicle* headVehicles;
+    Type* headTypes;
+    Client* headClients;
+    int optionA, optionB, optionC, count, user, nif;
+    float balance;
+    char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
 
     do {
         clrscr();
@@ -16,7 +20,7 @@ int main() {
         switch (optionA) {
             case 1:
                 do {
-                    Client* head = readClients();
+                    headClients = readClients();
 
                     clrscr();
                     menuApp();
@@ -38,23 +42,20 @@ int main() {
                             fgets(password, sizeof(password), stdin);
                             password[strcspn(password, "\n")] = 0;
 
-                            if ((user = authClient(head, username, password)) <= 0) {
-                                puts("\nO nome de utilizador ou palavra-passe estao incorretos.\n");
+                            if ((user = authClient(headClients, username, password)) <= 0) {
+                                puts("\nO nome de utilizador ou palavra-passe estao incorretos!\n");
                                 enterToContinue();
                                 break;
                             }
 
                             do {
-                                Vehicle* headVehicles = readVehicles();
-                                Type* headTypes = readTypes();
-                                Client* headClients = readClients();
-                                int nif;
-                                float balance;
-                                char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
+                                headVehicles = readVehicles();
+                                headTypes = readTypes();
+                                headClients = readClients();
 
                                 clrscr();
                                 menuApp();
-                                printf("Ola, %s!\n\n", getClientName(head, user));
+                                printf("Ola, %s!\n\n", getClientName(headClients, user));
 
                                 menuHeaderClient();
                                 if (listClient(headClients, user) == 0) {
@@ -107,8 +108,8 @@ int main() {
                                         printf("Montante: ");
                                         scanf("%f", &balance);
 
-                                        addBalance(head, user, balance);
-                                        saveClients(head);
+                                        addBalance(headClients, user, balance);
+                                        saveClients(headClients);
 
                                         break;
                                     case 5:
@@ -152,6 +153,41 @@ int main() {
                                 }
 
                             } while (optionC != 0);
+
+                            break;
+                        case 2:
+                            clrscr();
+                            menuApp();
+
+                            printf("Nome: ");
+                            clrbuffer();
+                            fgets(name, sizeof(name), stdin);
+                            name[strcspn(name, "\n")] = 0;
+
+                            printf("Nome de Utilizador: ");
+                            clrbuffer();
+                            fgets(username, sizeof(username), stdin);
+                            username[strcspn(username, "\n")] = 0;
+                            
+                            printf("Palavra-passe: ");
+                            clrbuffer();
+                            fgets(password, sizeof(password), stdin);
+                            password[strcspn(password, "\n")] = 0;
+                            encrypt(password);
+
+                            printf("NIF: ");
+                            scanf("%d", &nif);
+
+                            printf("Morada: ");
+                            clrbuffer();
+                            fgets(address, sizeof(address), stdin);
+                            address[strcspn(address, "\n")] = 0;
+
+                            headClients = insertClient(headClients, assignClientId(headClients), username, password, name, nif, address, 0);
+                            saveClients(headClients);
+
+                            puts("\nConta criada com sucesso!\n");
+                            enterToContinue();
 
                             break;
                         default:
