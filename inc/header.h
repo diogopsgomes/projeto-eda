@@ -91,10 +91,10 @@ typedef struct ride {
 void vehiclesMain();
 Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, char location[]);
 Vehicle* removeVehicle(Vehicle* head, int id);
-void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery, float range, char location[]);
-int listVehicles(Vehicle* head, Type* typesHead);
-int listVehiclesByRange(Vehicle* head, Type* typesHead);
-int listVehiclesByLocation(Vehicle* head, Type* typesHead, char location[]);
+void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery, float range, char location[]);
+int listVehicles(Vehicle* head, Type* headTypes);
+int listVehiclesByRange(Vehicle* head, Type* headTypes);
+int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]);
 int existVehicle(Vehicle* head, int id);
 int assignVehicleId(Vehicle* head);
 int saveVehicles(Vehicle* head);
@@ -112,6 +112,7 @@ Client* insertClient(Client* head, int id, char username[], char password[], cha
 Client* removeClient(Client* head, int id);
 void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]);
 int listClients(Client* head);
+int listClient(Client* head, int id);
 char* getClientName(Client* head, int id);
 int existClient(Client* head, int id);
 int assignClientId(Client* head);
@@ -136,16 +137,20 @@ Manager* readManagers();
 /*Auth*/
 void encrypt(char password[]);
 void decrypt(char password[]);
+int authClient(Client* head, char username[], char password[]);
 int authManager(Manager* head, char username[], char password[]);
 
 /*Menus*/
 void menuApp();
 void menuMain();
+void menuMainClients();
+void menuMainClientsLine();
 void menuAuth();
 void menuAuthClients();
 void menuAuthManagers();
 void menuHeaderVehicles();
 void menuHeaderClients();
+void menuHeaderClient();
 void menuHeaderManagers();
 void menuFooterRides();
 void menuFooterVehicles();

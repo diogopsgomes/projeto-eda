@@ -13,6 +13,18 @@ void encrypt(char password[]) {
     }
 }
 
+int authClient(Client* head, char username[], char password[]) {
+    encrypt(password);
+
+    while (head != NULL) {
+        if (strcmp(head->username, username) == 0 && strcmp(head->password, password) == 0) return head->id;
+
+        head = head->next;
+    }
+
+    return 0;
+}
+
 int authManager(Manager* head, char username[], char password[]) {
     encrypt(password);
 

@@ -207,17 +207,36 @@ void editClient(Client* head, int id, char username[], char password[], char nam
 
 // List Clients in Console
 int listClients(Client* head) {
-    if (head != NULL) {
-        while (head != NULL) {
-            printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->address);
+    int count = 0;
 
-            head = head->next;
-        }
+    while (head != NULL) {
+        printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->address);
 
-        return 1;
+        count++;
+
+        head = head->next;
     }
 
-    return 0;
+    return count;
+}
+
+// List Client in Console
+int listClient(Client* head, int id) {
+    int count = 0;
+
+    while (head != NULL) {
+        if (head->id == id) {
+            printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->address);
+
+            count++;
+
+            return count;
+        }
+
+        head = head->next;
+    }
+
+    return count;
 }
 
 // Get Client Name from Client ID
@@ -291,10 +310,7 @@ int saveClients(Client* head) {
     FILE* fp;
     fp = fopen(DATA_DIR"clients.txt", "w");
 
-    if (fp == NULL) {
-        fclose(fp);
-        return 0;
-    }
+    if (fp == NULL) return 0;
 
     while (head != NULL) {
         fprintf(fp, "%d;%s;%s;%s;%d;%s;%f\n", head->id, head->username, head->password, head->name, head->nif, head->address, head->balance);
@@ -312,10 +328,7 @@ Client* readClients() {
     fp = fopen(DATA_DIR"clients.txt", "r");
     Client* aux = NULL;
 
-    if (fp == NULL) {
-        fclose(fp);
-        return aux;
-    }
+    if (fp == NULL) return aux;
     
     int c = fgetc(fp);
     if (c == EOF) {

@@ -154,17 +154,17 @@ void editManager(Manager* head, int id, char username[], char password[], char n
 
 // List Managers in Console
 int listManagers(Manager* head) {
-    if (head != NULL) {
-        while (head != NULL) {
-            printf("  %06d\t%-25s\t%-25s\t\n", head->id, head->name, head->username);
+    int count = 0;
 
-            head = head->next;
-        }
+    while (head != NULL) {
+        printf("  %06d\t%-25s\t%-25s\t\n", head->id, head->name, head->username);
 
-        return 1;
+        count++;
+
+        head = head->next;
     }
 
-    return 0;
+    return count;
 }
 
 // Get Manager Name from Manager ID
@@ -205,10 +205,7 @@ int saveManagers(Manager* head) {
     FILE* fp;
     fp = fopen(DATA_DIR"managers.txt", "w");
 
-    if (fp == NULL) {
-        fclose(fp);
-        return 0;
-    }
+    if (fp == NULL) return 0;
 
     while (head != NULL) {
         fprintf(fp, "%d;%s;%s;%s\n", head->id, head->username, head->password, head->name);
@@ -226,10 +223,7 @@ Manager* readManagers() {
     fp = fopen(DATA_DIR"managers.txt", "r");
     Manager* aux = NULL;
 
-    if (fp == NULL) {
-        fclose(fp);
-        return aux;
-    }
+    if (fp == NULL) return aux;
 
     int c = fgetc(fp);
     if (c == EOF) {

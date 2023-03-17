@@ -10,12 +10,12 @@ void vehiclesMain() {
 
     do {
         Vehicle* head = readVehicles();
-        Type* typesHead = readTypes();
+        Type* headTypes = readTypes();
 
         clrscr();
         menuHeaderVehicles();
 
-        if ((count = listVehicles(head, typesHead)) == 0) {
+        if ((count = listVehicles(head, headTypes)) == 0) {
             puts("\n                                                    Nao existem veiculos registados!                                                     \n");
         } else {
             puts("");
@@ -79,7 +79,7 @@ void vehiclesMain() {
                 fgets(location, sizeof(location), stdin);
                 location[strcspn(location, "\n")] = 0;
                 
-                editVehicle(head, typesHead, id, type, battery, range, location);
+                editVehicle(head, headTypes, id, type, battery, range, location);
                 saveVehicles(head);
 
                 break;
@@ -94,7 +94,7 @@ void vehiclesMain() {
             case 4:
                 clrscr();
                 menuHeaderVehicles();
-                count = listVehiclesByRange(head, typesHead);
+                count = listVehiclesByRange(head, headTypes);
                 puts("");
                 showCount(count);
                 puts("");
@@ -110,7 +110,7 @@ void vehiclesMain() {
                 clrscr();
                 menuHeaderVehicles();
 
-                if ((count = listVehiclesByLocation(head, typesHead, location)) == 0) {
+                if ((count = listVehiclesByLocation(head, headTypes, location)) == 0) {
                     puts("\n                                                 Nao existem veiculos nessa localizacao!                                                 \n");
                 } else {
                     puts("");
@@ -178,10 +178,10 @@ Vehicle* removeVehicle(Vehicle* head, int id) {
 }
 
 // Edit Vehicle
-void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery, float range, char location[]) {
+void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery, float range, char location[]) {
     while (head != NULL) {
         if (head->id == id) {
-            if (type >= 0 && existType(typesHead, type)) head->type = type;
+            if (type >= 0 && existType(headTypes, type)) head->type = type;
             if (battery >= 0) head->battery = battery;
             if (range >= 0) head->range = range;
             if (strlen(location) > 0) strcpy(head->location, location);
@@ -194,11 +194,11 @@ void editVehicle(Vehicle* head, Type* typesHead, int id, int type, float battery
 }
 
 // List Vehicles in Console
-int listVehicles(Vehicle* head, Type* typesHead) {
+int listVehicles(Vehicle* head, Type* headTypes) {
     int count = 0;
     
     while (head != NULL) {
-        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%s\n", head->id, getTypeName(typesHead, head->type), head->battery, head->range, head->location);
+        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%s\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, head->location);
 
         count++;
         
@@ -209,7 +209,7 @@ int listVehicles(Vehicle* head, Type* typesHead) {
 }
 
 // List Vehicles in Console Ordered by Range (Descending)
-int listVehiclesByRange(Vehicle* head, Type* typesHead) {
+int listVehiclesByRange(Vehicle* head, Type* headTypes) {
     int swapped;
 
     if (head != NULL) {
@@ -240,10 +240,10 @@ int listVehiclesByRange(Vehicle* head, Type* typesHead) {
         } while (swapped);
     }
 
-    return listVehicles(head, typesHead);
+    return listVehicles(head, headTypes);
 }
 
-int listVehiclesByLocation(Vehicle* head, Type* typesHead, char location[]) {
+int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]) {
     Vehicle* filtered = NULL;
 
     while (head != NULL) {
@@ -254,7 +254,7 @@ int listVehiclesByLocation(Vehicle* head, Type* typesHead, char location[]) {
         head = head->next;
     }
     
-    return listVehiclesByRange(filtered, typesHead);
+    return listVehiclesByRange(filtered, headTypes);
 }
 
 // Check if Vehicle ID exists
@@ -284,10 +284,7 @@ int saveVehicles(Vehicle* head) {
     FILE* fp;
     fp = fopen(DATA_DIR"vehicles.txt", "w");
 
-    if (fp == NULL) {
-        fclose(fp);
-        return 0;
-    }
+    if (fp == NULL) return 0;
 
     while (head != NULL) {
         fprintf(fp, "%d;%d;%f;%f;%s\n", head->id, head->type, head->battery, head->range, head->location);
@@ -305,10 +302,7 @@ Vehicle* readVehicles() {
     fp = fopen(DATA_DIR"vehicles.txt", "r");
     Vehicle* aux = NULL;
 
-    if (fp == NULL) {
-        fclose(fp);
-        return aux;
-    }
+    if (fp == NULL) return aux;
     
     int c = fgetc(fp);
     if (c == EOF) {
@@ -392,42 +386,45 @@ int existType(Type* head, int id) {
 // Save Types in File
 int saveTypes(Type* head) {
     FILE* fp;
-    fp = fopen("types.txt", "w");
+    fp = fopen(DATA_DIR"types.txt", "w");
 
-    if (fp != NULL) {
-        Type* aux = head;
+    if (fp == NULL) return 0;
 
-        while (aux != NULL) {
-            fprintf(fp, "%d;%s;%f\n", aux->id, aux->name, aux->cost);
-            aux = aux->next;
-        }
-
-        fclose(fp);
-
-        return 1;
+    while (head != NULL) {
+        fprintf(fp, "%d;%s;%f\n", head->id, head->name, head->cost);
+        head = head->next;
     }
-    
-    return 0;
+
+    fclose(fp);
+
+    return 1;
 }
 
 // Read Types from File
 Type* readTypes() {
     FILE* fp;
-    fp = fopen("types.txt", "r");
+    fp = fopen(DATA_DIR"types.txt", "r");
     Type* aux = NULL;
 
-    if (fp != NULL) {
-        int id;
-        float cost;
-        char name[SIZE_NAME];
-
-        while (!feof(fp)) { 
-            fscanf(fp, "%d;%[^;];%f\n", &id, &name, &cost);
-            aux = insertType(aux, id, name, cost);
-        }
-
+    if (fp == NULL) return aux;
+    
+    int c = fgetc(fp);
+    if (c == EOF) {
         fclose(fp);
+        return aux;
     }
+    ungetc(c, fp);
+
+    int id;
+    float cost;
+    char name[SIZE_NAME];
+
+    while (!feof(fp)) { 
+        fscanf(fp, "%d;%[^;];%f\n", &id, &name, &cost);
+        aux = insertType(aux, id, name, cost);
+    }
+
+    fclose(fp);
 
     return aux;
 }
