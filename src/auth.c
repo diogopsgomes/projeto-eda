@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "header.h"
+#include "../inc/header.h"
 
 void encrypt(char password[]) {
     for (int i = 0; i < strlen(password); i++) {

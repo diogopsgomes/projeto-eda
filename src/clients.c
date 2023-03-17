@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "header.h"
+#include "../inc/header.h"
 
 void clientsMain() {
     int option, id, nif, count;
@@ -289,50 +289,51 @@ void editBalance(Client* head, int id, float balance) {
 // Save Clients in File
 int saveClients(Client* head) {
     FILE* fp;
-    fp = fopen("clients.txt", "w");
+    fp = fopen(DATA_DIR"clients.txt", "w");
 
-    if (fp != NULL) {
-        Client* aux = head;
-
-        while (aux != NULL) {
-            fprintf(fp, "%d;%s;%s;%s;%d;%s;%f\n", aux->id, aux->username, aux->password, aux->name, aux->nif, aux->address, aux->balance);
-            aux = aux->next;
-        }
-
+    if (fp == NULL) {
         fclose(fp);
-
-        return 1;
+        return 0;
     }
-    
-    return 0;
+
+    while (head != NULL) {
+        fprintf(fp, "%d;%s;%s;%s;%d;%s;%f\n", head->id, head->username, head->password, head->name, head->nif, head->address, head->balance);
+        head = head->next;
+    }
+
+    fclose(fp);
+
+    return 1;
 }
 
 // Read Clients from File
 Client* readClients() {
     FILE* fp;
-    fp = fopen("clients.txt", "r");
+    fp = fopen(DATA_DIR"clients.txt", "r");
     Client* aux = NULL;
 
-    if (fp != NULL) {
-        int c = fgetc(fp);
-        if (c == EOF) {
-            printf("Error: file is empty.\n");
-            fclose(fp);
-            return NULL;
-        }
-        ungetc(c, fp);
-
-        int id, nif;
-        char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
-        float balance;
-
-        while (!feof(fp)) { 
-            fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f\n", &id, &username, &password, &name, &nif, &address, &balance);
-            aux = insertClient(aux, id, username, password, name, nif, address, balance);
-        }
-
+    if (fp == NULL) {
         fclose(fp);
+        return aux;
     }
+    
+    int c = fgetc(fp);
+    if (c == EOF) {
+        fclose(fp);
+        return aux;
+    }
+    ungetc(c, fp);
+
+    int id, nif;
+    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
+    float balance;
+
+    while (!feof(fp)) { 
+        fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f\n", &id, &username, &password, &name, &nif, &address, &balance);
+        aux = insertClient(aux, id, username, password, name, nif, address, balance);
+    }
+
+    fclose(fp);
 
     return aux;
 }

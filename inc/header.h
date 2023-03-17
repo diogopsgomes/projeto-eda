@@ -1,6 +1,8 @@
 #ifndef HEADER_H_
 #define HEADER_H_
 
+#define DATA_DIR "data/"
+
 #define SIZE_USERNAME 40
 #define SIZE_PASSWORD 40
 #define SIZE_NAME 60
@@ -137,7 +139,6 @@ void decrypt(char password[]);
 int authManager(Manager* head, char username[], char password[]);
 
 /*Menus*/
-void showCount(int count);
 void menuMain();
 void menuAuth();
 void menuAuthClients();
@@ -166,5 +167,6 @@ void menuTitleEditManager();
 void clrscr();
 void clrbuffer();
 void enterToContinue();
+void showCount(int count);
 
 #endif

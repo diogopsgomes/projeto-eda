@@ -1,33 +1,41 @@
-all: prog
+BIN_DIR = bin
+INC_DIR = inc
+OBJ_DIR = obj
+SRC_DIR = src
 
-prog: main.o vehicles.o clients.o managers.o auth.o menus.o utilities.o
-	gcc -g -o prog main.o vehicles.o clients.o managers.o auth.o menus.o utilities.o
+EXE_FILE = app
 
-main.o: main.c
-	gcc -g -o main.o main.c -c
+all: $(BIN_DIR)/app
 
-vehicles.o: vehicles.c header.h
-	gcc -g -o vehicles.o vehicles.c -c
+$(BIN_DIR)/$(EXE_FILE): $(OBJ_DIR)/main.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
+	gcc -g -o $(BIN_DIR)/$(EXE_FILE) $(OBJ_DIR)/main.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
 
-clients.o: clients.c header.h
-	gcc -g -o clients.o clients.c -c
+$(OBJ_DIR)/main.o: $(SRC_DIR)/main.c
+	gcc -g -o $(OBJ_DIR)/main.o $(SRC_DIR)/main.c -c
 
-managers.o: managers.c header.h
-	gcc -g -o managers.o managers.c -c
+$(OBJ_DIR)/vehicles.o: $(SRC_DIR)/vehicles.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/vehicles.o $(SRC_DIR)/vehicles.c -c
 
-auth.o: auth.c header.h
-	gcc -g -o auth.o auth.c -c
+$(OBJ_DIR)/clients.o: $(SRC_DIR)/clients.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/clients.o $(SRC_DIR)/clients.c -c
 
-menus.o: menus.c header.h
-	gcc -g -o menus.o menus.c -c
+$(OBJ_DIR)/managers.o: $(SRC_DIR)/managers.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/managers.o $(SRC_DIR)/managers.c -c
 
-utilities.o: utilities.c header.h
-	gcc -g -o utilities.o utilities.c -c
+$(OBJ_DIR)/auth.o: $(SRC_DIR)/auth.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/auth.o $(SRC_DIR)/auth.c -c
+
+$(OBJ_DIR)/menus.o: $(SRC_DIR)/menus.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/menus.o $(SRC_DIR)/menus.c -c
+
+$(OBJ_DIR)/utilities.o: $(SRC_DIR)/utilities.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/utilities.o $(SRC_DIR)/utilities.c -c
 
 clean:
-	del /Q /S *.o *~ math
+	del /Q /S $(BIN_DIR)\*.exe
+	del /Q /S $(OBJ_DIR)\*.o
 
 run:
 	MinGW32-make clean
 	MinGW32-make all
-	./prog
+	./$(BIN_DIR)/$(EXE_FILE)

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "header.h"
+#include "../inc/header.h"
 
 void managersMain() {
     int option, id, count;
@@ -203,41 +203,50 @@ int assignManagerId(Manager* head) {
 // Save Managers in File
 int saveManagers(Manager* head) {
     FILE* fp;
-    fp = fopen("managers.txt", "w");
+    fp = fopen(DATA_DIR"managers.txt", "w");
 
-    if (fp != NULL) {
-        Manager* aux = head;
-
-        while (aux != NULL) {
-            fprintf(fp, "%d;%s;%s;%s\n", aux->id, aux->username, aux->password, aux->name);
-            aux = aux->next;
-        }
-
+    if (fp == NULL) {
         fclose(fp);
-
-        return 1;
+        return 0;
     }
-    
-    return 0;
+
+    while (head != NULL) {
+        fprintf(fp, "%d;%s;%s;%s\n", head->id, head->username, head->password, head->name);
+        head = head->next;
+    }
+
+    fclose(fp);
+
+    return 1;
 }
 
 // Read Managers from File
 Manager* readManagers() {
     FILE* fp;
-    fp = fopen("managers.txt", "r");
+    fp = fopen(DATA_DIR"managers.txt", "r");
     Manager* aux = NULL;
 
-    if (fp != NULL) {
-        int id;
-        char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
-
-        while (!feof(fp)) { 
-            fscanf(fp, "%d;%[^;];%[^;];%[^\n]\n", &id, &username, &password, &name);
-            aux = insertManager(aux, id, username, password, name);
-        }
-
+    if (fp == NULL) {
         fclose(fp);
+        return aux;
     }
+
+    int c = fgetc(fp);
+    if (c == EOF) {
+        fclose(fp);
+        return aux;
+    }
+    ungetc(c, fp);
+
+    int id;
+    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
+
+    while (!feof(fp)) { 
+        fscanf(fp, "%d;%[^;];%[^;];%[^\n]\n", &id, &username, &password, &name);
+        aux = insertManager(aux, id, username, password, name);
+    }
+
+    fclose(fp);
 
     return aux;
 }

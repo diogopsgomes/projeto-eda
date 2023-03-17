@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "header.h"
+#include "../inc/header.h"
 
 void vehiclesMain() {
     int option, id, type, count;
@@ -282,42 +282,51 @@ int assignVehicleId(Vehicle* head) {
 // Save Vehicles in File
 int saveVehicles(Vehicle* head) {
     FILE* fp;
-    fp = fopen("vehicles.txt", "w");
+    fp = fopen(DATA_DIR"vehicles.txt", "w");
 
-    if (fp != NULL) {
-        Vehicle* aux = head;
-
-        while (aux != NULL) {
-            fprintf(fp, "%d;%d;%f;%f;%s\n", aux->id, aux->type, aux->battery, aux->range, aux->location);
-            aux = aux->next;
-        }
-
+    if (fp == NULL) {
         fclose(fp);
-
-        return 1;
+        return 0;
     }
-    
-    return 0;
+
+    while (head != NULL) {
+        fprintf(fp, "%d;%d;%f;%f;%s\n", head->id, head->type, head->battery, head->range, head->location);
+        head = head->next;
+    }
+
+    fclose(fp);
+
+    return 1;
 }
 
 // Read Vehicles from File
 Vehicle* readVehicles() {
     FILE* fp;
-    fp = fopen("vehicles.txt", "r");
+    fp = fopen(DATA_DIR"vehicles.txt", "r");
     Vehicle* aux = NULL;
 
-    if (fp != NULL) {
-        int id, type;
-        float battery, range;
-        char location[SIZE_LOCATION];
-
-        while (!feof(fp)) { 
-            fscanf(fp, "%d;%d;%f;%f;%s\n", &id, &type, &battery, &range, &location);
-            aux = insertVehicle(aux, id, type, battery, range, location);
-        }
-
+    if (fp == NULL) {
         fclose(fp);
+        return aux;
     }
+    
+    int c = fgetc(fp);
+    if (c == EOF) {
+        fclose(fp);
+        return aux;
+    }
+    ungetc(c, fp);
+
+    int id, type;
+    float battery, range;
+    char location[SIZE_LOCATION];
+
+    while (!feof(fp)) { 
+        fscanf(fp, "%d;%d;%f;%f;%s\n", &id, &type, &battery, &range, &location);
+        aux = insertVehicle(aux, id, type, battery, range, location);
+    }
+
+    fclose(fp);
 
     return aux;
 }
