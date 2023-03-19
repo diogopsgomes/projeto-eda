@@ -26,9 +26,13 @@ void menuMain() {
     printf("Escolha uma opcao: ");
 }
 
-void menuMainClients() {
+void menuMainClients(int available) {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
-    printf("| 1 - Nova Viagem | 2 - Historico de Viagens | 3 - Procurar Veiculo | 4 - Adicionar Saldo | 5 - Editar Perfil | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
+    if (available == 1) {
+        printf("| 1 - Iniciar Viagem | 2 - Historico de Viagens | 3 - Procurar Veiculo | 4 - Adicionar Saldo | 5 - Editar Perfil | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
+    } else {
+        printf("| 1 - Terminar Viagem | 2 - Historico de Viagens | 3 - Procurar Veiculo | 4 - Adicionar Saldo | 5 - Editar Perfil | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
+    }
 }
 
 void menuMainClientsLine() {

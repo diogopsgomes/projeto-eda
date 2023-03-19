@@ -24,14 +24,7 @@
 #define WHITE   "\x1B[37m"
 #define RESET   "\x1B[0m"
 
-typedef struct datetime {
-    int day;
-    int month;
-    int year;
-    int hour;
-    int minute;
-
-} DateTime;
+#include <time.h>
 
 typedef struct type {
     int id; // 1 - Trotinete; 2 - Bicicleta
@@ -47,6 +40,7 @@ typedef struct vehicle {
     float battery;
     float range;
     char location[SIZE_LOCATION];
+    int available;
     struct vehicle* next;
 
 } Vehicle;
@@ -59,6 +53,7 @@ typedef struct client {
     int nif;
     char address[SIZE_ADDRESS];
     float balance;
+    int available;
     struct client* next;
 
 } Client;
@@ -74,22 +69,32 @@ typedef struct manager {
 
 typedef struct ride {
     int id;
-    int client;
     int vehicle;
-    DateTime startDate;
-    DateTime endDate;
+    int client;
+    time_t startTime;
+    time_t endTime;
     char startLocation[SIZE_LOCATION];
     char endLocation[SIZE_LOCATION];
-    float cost; //?
-    int duration; //?
+    float cost;
     float distance;
     struct ride* next;
 
 } Ride;
 
+/*Rides*/
+void ridesMain();
+Ride* insertRide(Ride* head, Vehicle* headVehicles, Type* headTypes, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance);
+Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, int vehicle, int client);
+void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, char endLocation[]);
+int assignRideId(Ride* head);
+int currentRide(Ride* head, int id);
+void showRide(Ride* head, int id);
+int saveRides(Ride* head);
+Ride* readRides();
+
 /*Vehicles*/
 void vehiclesMain();
-Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, char location[]);
+Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, int available, char location[]);
 Vehicle* removeVehicle(Vehicle* head, int id);
 void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery, float range, char location[]);
 int listVehicles(Vehicle* head, Type* headTypes);
@@ -97,8 +102,12 @@ int listVehiclesByRange(Vehicle* head, Type* headTypes);
 int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]);
 int existVehicle(Vehicle* head, int id);
 int assignVehicleId(Vehicle* head);
+int isVehicleAvailable(Vehicle* head, int id);
+Vehicle* copyLinkedList(Vehicle* head);
 int saveVehicles(Vehicle* head);
 Vehicle* readVehicles();
+float getVehicleCost(Vehicle* head, Type* headTypes, int id);
+float getTypeCost(Type* head, int id);
 char* getTypeName(Type* head, int id);
 Type* insertType(Type* head, int id, char name[], float cost);
 int listTypes(Type* head);
@@ -108,7 +117,7 @@ Type* readTypes();
 
 /*Clients*/
 void clientsMain();
-Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance);
+Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance, int available);
 Client* removeClient(Client* head, int id);
 void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]);
 int listClients(Client* head);
@@ -116,6 +125,7 @@ int listClient(Client* head, int id);
 char* getClientName(Client* head, int id);
 int existClient(Client* head, int id);
 int assignClientId(Client* head);
+int isClientAvailable(Client* head, int id);
 void addBalance(Client* head, int id, float balance);
 void removeBalance(Client* head, int id, float balance);
 void editBalance(Client* head, int id, float balance);
@@ -143,7 +153,7 @@ int authManager(Manager* head, char username[], char password[]);
 /*Menus*/
 void menuApp();
 void menuMain();
-void menuMainClients();
+void menuMainClients(int available);
 void menuMainClientsLine();
 void menuAuth();
 void menuAuthClients();

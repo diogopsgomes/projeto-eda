@@ -53,7 +53,7 @@ void clientsMain() {
                 fgets(address, sizeof(address), stdin);
                 address[strcspn(address, "\n")] = 0;
 
-                head = insertClient(head, assignClientId(head), username, password, name, nif, address, 0);
+                head = insertClient(head, assignClientId(head), username, password, name, nif, address, 0, 1);
                 saveClients(head);
 
                 break;
@@ -138,8 +138,8 @@ void clientsMain() {
 }
 
 // Insert New Client
-Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance) {
-    Client *new = malloc(sizeof(struct client)), *prev;
+Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance, int available) {
+    Client *new = malloc(sizeof(struct client)), *aux = head;
 
     if (new != NULL) {
         new->id = id;
@@ -149,14 +149,15 @@ Client* insertClient(Client* head, int id, char username[], char password[], cha
         new->nif = nif;
         strcpy(new->address, address);
         new->balance = balance;
+        new->available = available;
         new->next = NULL;
     }
 
     if (head == NULL) return new;
 
-    for (prev = head; prev->next != NULL; prev = prev->next);
+    while (aux->next != NULL) aux = aux->next;
 
-    prev->next = new;
+    aux->next = new;
 
 	return head;
 }
@@ -272,6 +273,21 @@ int assignClientId(Client* head) {
     return 1;
 }
 
+// Check if a Client in not in a Ride
+int isClientAvailable(Client* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) {
+            if (head->available == 1) {
+                return 1;
+            }
+        }
+
+        head = head->next;
+    }
+
+    return 0;
+}
+
 // Add a given amount to Client Balance
 void addBalance(Client* head, int id, float balance) {
     while (head != NULL) {
@@ -313,7 +329,7 @@ int saveClients(Client* head) {
     if (fp == NULL) return 0;
 
     while (head != NULL) {
-        fprintf(fp, "%d;%s;%s;%s;%d;%s;%f\n", head->id, head->username, head->password, head->name, head->nif, head->address, head->balance);
+        fprintf(fp, "%d;%s;%s;%s;%d;%s;%f;%d\n", head->id, head->username, head->password, head->name, head->nif, head->address, head->balance, head->available);
         head = head->next;
     }
 
@@ -337,13 +353,13 @@ Client* readClients() {
     }
     ungetc(c, fp);
 
-    int id, nif;
+    int id, nif, available;
     char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
     float balance;
 
     while (!feof(fp)) {
-        fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f\n", &id, &username, &password, &name, &nif, &address, &balance);
-        aux = insertClient(aux, id, username, password, name, nif, address, balance);
+        fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f;%d\n", &id, &username, &password, &name, &nif, &address, &balance, &available);
+        aux = insertClient(aux, id, username, password, name, nif, address, balance, available);
     }
 
     fclose(fp);

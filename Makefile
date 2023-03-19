@@ -7,11 +7,14 @@ EXE_FILE = app
 
 all: $(BIN_DIR)/app
 
-$(BIN_DIR)/$(EXE_FILE): $(OBJ_DIR)/main.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
-	gcc -g -o $(BIN_DIR)/$(EXE_FILE) $(OBJ_DIR)/main.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
+$(BIN_DIR)/$(EXE_FILE): $(OBJ_DIR)/main.o $(OBJ_DIR)/rides.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
+	gcc -g -o $(BIN_DIR)/$(EXE_FILE) $(OBJ_DIR)/main.o $(OBJ_DIR)/rides.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
 
 $(OBJ_DIR)/main.o: $(SRC_DIR)/main.c
 	gcc -g -o $(OBJ_DIR)/main.o $(SRC_DIR)/main.c -c
+
+$(OBJ_DIR)/rides.o: $(SRC_DIR)/rides.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/rides.o $(SRC_DIR)/rides.c -c
 
 $(OBJ_DIR)/vehicles.o: $(SRC_DIR)/vehicles.c $(INC_DIR)/header.h
 	gcc -g -o $(OBJ_DIR)/vehicles.o $(SRC_DIR)/vehicles.c -c

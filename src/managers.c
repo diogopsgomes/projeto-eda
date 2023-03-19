@@ -91,7 +91,7 @@ void managersMain() {
 
 // Insert New Manager
 Manager* insertManager(Manager* head, int id, char username[], char password[], char name[]) {
-    Manager *new = malloc(sizeof(struct manager)), *prev;
+    Manager *new = malloc(sizeof(struct manager)), *aux = head;
 
     if (new != NULL) {
         new->id = id;
@@ -103,9 +103,9 @@ Manager* insertManager(Manager* head, int id, char username[], char password[], 
 
     if (head == NULL) return new;
 
-    for (prev = head; prev->next != NULL; prev = prev->next);
+    while (aux->next != NULL) aux = aux->next;
 
-    prev->next = new;
+    aux->next = new;
 
 	return head;
 }

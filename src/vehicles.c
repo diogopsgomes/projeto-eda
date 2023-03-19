@@ -44,7 +44,7 @@ void vehiclesMain() {
                 fgets(location, sizeof(location), stdin);
                 location[strcspn(location, "\n")] = 0;
 
-                head = insertVehicle(head, assignVehicleId(head), type, battery, range, location);
+                head = insertVehicle(head, assignVehicleId(head), type, battery, range, 1, location);
                 saveVehicles(head);
 
                 break;
@@ -129,23 +129,24 @@ void vehiclesMain() {
 }
 
 // Insert New Vehicle
-Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, char location[]) {
-    Vehicle *new = malloc(sizeof(struct vehicle)), *prev;
+Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, int available, char location[]) {
+    Vehicle *new = malloc(sizeof(struct vehicle)), *aux = head;
 
     if (new != NULL) {
         new->id = id;
         new->type = type;
         new->battery = battery;
         new->range = range;
+        new->available = available;
         strcpy(new->location, location);
         new->next = NULL;
     }
 
     if (head == NULL) return new;
 
-    for (prev = head; prev->next != NULL; prev = prev->next);
+    while (aux->next != NULL) aux = aux->next;
 
-    prev->next = new;
+    aux->next = new;
 
 	return head;
 }
@@ -248,7 +249,7 @@ int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]) {
 
     while (head != NULL) {
         if (strcmp(head->location, location) == 0) {
-            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->location);
+            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->available, head->location);
         }
 
         head = head->next;
@@ -279,6 +280,31 @@ int assignVehicleId(Vehicle* head) {
     return 1;
 }
 
+// Check if a Vehicle in not in a Ride
+int isVehicleAvailable(Vehicle* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) {
+            if (head->available == 1) {
+                return 1;
+            }
+        }
+
+        head = head->next;
+    }
+
+    return 0;
+}
+
+// Copy linked list
+Vehicle* copyLinkedList(Vehicle* head) {
+    Vehicle* copy = NULL;
+    while (head != NULL) {
+        copy = insertVehicle(copy, head->id, head->type, head->battery, head->range, head->available, head->location);
+        head = head->next;
+    }
+    return copy;
+}
+
 // Save Vehicles in File
 int saveVehicles(Vehicle* head) {
     FILE* fp;
@@ -287,7 +313,7 @@ int saveVehicles(Vehicle* head) {
     if (fp == NULL) return 0;
 
     while (head != NULL) {
-        fprintf(fp, "%d;%d;%f;%f;%s\n", head->id, head->type, head->battery, head->range, head->location);
+        fprintf(fp, "%d;%d;%f;%f;%d;%s\n", head->id, head->type, head->battery, head->range, head->available, head->location);
         head = head->next;
     }
 
@@ -311,18 +337,40 @@ Vehicle* readVehicles() {
     }
     ungetc(c, fp);
 
-    int id, type;
+    int id, type, available;
     float battery, range;
     char location[SIZE_LOCATION];
 
     while (!feof(fp)) {
-        fscanf(fp, "%d;%d;%f;%f;%s\n", &id, &type, &battery, &range, &location);
-        aux = insertVehicle(aux, id, type, battery, range, location);
+        fscanf(fp, "%d;%d;%f;%f;%d;%s\n", &id, &type, &battery, &range, &available, &location);
+        aux = insertVehicle(aux, id, type, battery, range, available, location);
     }
 
     fclose(fp);
 
     return aux;
+}
+
+// Get Type Cost from Type ID
+float getVehicleCost(Vehicle* head, Type* headTypes, int id) {
+    while (head != NULL) {
+        if (head->id == id) return getTypeCost(headTypes, head->type);
+
+        head = head->next;
+    }
+
+    return -1;
+}
+
+// Get Type Cost from Type ID
+float getTypeCost(Type* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->cost;
+
+        head = head->next;
+    }
+
+    return -1;
 }
 
 // Get Type Name from Type ID

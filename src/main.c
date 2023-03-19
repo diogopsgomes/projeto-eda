@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "../inc/header.h"
 
 int main() {
-    Vehicle* headVehicles;
+    Ride* headRides;
+    Vehicle* headVehicles, *headVehiclesSorted;
     Type* headTypes;
     Client* headClients;
-    int optionA, optionB, optionC, count, user, nif;
+    Manager* headManagers;
+    int optionA, optionB, optionC, count, nif, available, ride, vehicle, user;
     float balance;
     char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
 
@@ -49,9 +52,12 @@ int main() {
                             }
 
                             do {
+                                headRides = readRides();
                                 headVehicles = readVehicles();
                                 headTypes = readTypes();
                                 headClients = readClients();
+
+                                available = isClientAvailable(headClients, user);
 
                                 clrscr();
                                 menuApp();
@@ -65,19 +71,54 @@ int main() {
                                 }
 
                                 menuHeaderVehicles();
-                                if ((count = listVehiclesByRange(headVehicles, headTypes)) == 0) {
+                                headVehiclesSorted = copyLinkedList(headVehicles);
+                                if ((count = listVehiclesByRange(headVehiclesSorted, headTypes)) == 0) {
                                     puts("\n                                                        Nao existem veiculos registados!                                                         \n");
                                 } else {
                                     puts("");
                                     showCount(count);
                                 }
 
-                                menuMainClients();
+                                menuMainClients(available);
                                 scanf("%d", &optionC);
 
                                 switch (optionC) {
                                     case 1:
-                                        
+                                        menuMainClientsLine();
+
+                                        if (available == 1) {
+                                            do {
+                                                printf("Veiculo: ");
+                                                scanf("%d", &vehicle);
+                                                if ((available = isVehicleAvailable(headVehicles, vehicle)) == 0) {
+                                                    printf("Veiculo indisponivel!");
+                                                }
+                                            } while (available == 0);
+
+                                            headRides = startRide(headRides, headVehicles, headTypes, headClients, assignRideId(headRides), vehicle, user);
+
+                                            puts(GREEN"\nBoa Viagem!\n"RESET);
+                                            enterToContinue();                                            
+                                        } else {
+                                            printf("Localizacao: ");
+                                            clrbuffer();
+                                            fgets(location, sizeof(location), stdin);
+                                            location[strcspn(location, "\n")] = 0;
+
+                                            ride = currentRide(headRides, user);
+
+                                            endRide(headRides, headVehicles, headTypes, headClients, ride, location);
+
+                                            puts(GREEN"\nViagem Terminada!\n"RESET);
+                                            showRide(headRides, ride);
+                                            puts("");
+                                            enterToContinue();
+                                        }
+
+                                        saveRides(headRides);
+                                        saveVehicles(headVehicles);
+                                        saveClients(headClients);
+
                                         break;
                                     case 2:
                                         
@@ -183,7 +224,7 @@ int main() {
                             fgets(address, sizeof(address), stdin);
                             address[strcspn(address, "\n")] = 0;
 
-                            headClients = insertClient(headClients, assignClientId(headClients), username, password, name, nif, address, 0);
+                            headClients = insertClient(headClients, assignClientId(headClients), username, password, name, nif, address, 0, 1);
                             saveClients(headClients);
 
                             puts("\nConta criada com sucesso!\n");
@@ -199,7 +240,7 @@ int main() {
                 break;
             case 2:
                 do {
-                    Manager* head = readManagers();
+                    headManagers = readManagers();
 
                     clrscr();
                     menuApp();
@@ -221,7 +262,7 @@ int main() {
                             fgets(password, sizeof(password), stdin);
                             password[strcspn(password, "\n")] = 0;
 
-                            if ((user = authManager(head, username, password)) <= 0) {
+                            if ((user = authManager(headManagers, username, password)) <= 0) {
                                 puts("\nO nome de utilizador ou palavra-passe estao incorretos.\n");
                                 enterToContinue();
                                 break;
@@ -230,7 +271,7 @@ int main() {
                             do {
                                 clrscr();
                                 menuApp();
-                                printf("Ola, %s!\n\n", getManagerName(head, user));
+                                printf("Ola, %s!\n\n", getManagerName(headManagers, user));
                                 menuMain();
                                 scanf("%d", &optionC);
 
