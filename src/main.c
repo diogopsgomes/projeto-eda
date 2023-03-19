@@ -10,7 +10,7 @@ int main() {
     Type* headTypes;
     Client* headClients;
     Manager* headManagers;
-    int optionA, optionB, optionC, count, nif, available, ride, vehicle, user;
+    int optionA, optionB, optionC, count, nif, available, charged, ride, vehicle, user;
     float balance;
     char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
 
@@ -46,7 +46,7 @@ int main() {
                             password[strcspn(password, "\n")] = 0;
 
                             if ((user = authClient(headClients, username, password)) <= 0) {
-                                puts("\nO nome de utilizador ou palavra-passe estao incorretos!\n");
+                                puts(RED"\nO nome de utilizador ou palavra-passe estao incorretos!\n"RESET);
                                 enterToContinue();
                                 break;
                             }
@@ -91,9 +91,12 @@ int main() {
                                                 printf("Veiculo: ");
                                                 scanf("%d", &vehicle);
                                                 if ((available = isVehicleAvailable(headVehicles, vehicle)) == 0) {
-                                                    puts(RED"\nVeiculo indisponivel!\n"RESET);
+                                                    puts(RED"\nVeiculo em uso!\n"RESET);
                                                 }
-                                            } while (available == 0);
+                                                if ((charged = isVehicleCharged(headVehicles, vehicle)) == 0) {
+                                                    puts(RED"\nVeiculo sem bateria!\n"RESET);
+                                                }
+                                            } while (available == 0 || charged == 0);
 
                                             headRides = startRide(headRides, headVehicles, headTypes, headClients, assignRideId(headRides), vehicle, user);
 
@@ -121,7 +124,20 @@ int main() {
 
                                         break;
                                     case 2:
-                                        
+                                        clrscr();
+                                        menuApp();
+                                        menuHeaderRidesClient();
+
+                                        if ((count = listRidesClient(headRides, headClients, user)) == 0) {
+                                            puts("\n                                                        Nao existem viagens registadas!                                                         \n");
+                                        } else {
+                                            puts("");
+                                            showCount(count);
+                                        }
+
+                                        puts("");
+                                        enterToContinue();
+
                                         break;
                                     case 3:
                                         menuTitleListVehiclesByLocation();
@@ -263,7 +279,7 @@ int main() {
                             password[strcspn(password, "\n")] = 0;
 
                             if ((user = authManager(headManagers, username, password)) <= 0) {
-                                puts("\nO nome de utilizador ou palavra-passe estao incorretos.\n");
+                                puts(RED"\nO nome de utilizador ou palavra-passe estao incorretos.\n"RESET);
                                 enterToContinue();
                                 break;
                             }
@@ -277,7 +293,7 @@ int main() {
 
                                 switch (optionC) {
                                     case 1:
-                                        
+                                        ridesMain();
                                         break;
                                     case 2:
                                         vehiclesMain();

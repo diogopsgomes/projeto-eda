@@ -251,6 +251,17 @@ char* getClientName(Client* head, int id) {
     return "*********";
 }
 
+// Get Client Username from Client ID
+char* getClientUsername(Client* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->username;
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
 // Check if Client ID exists
 int existClient(Client* head, int id) {
     while (head != NULL) {

@@ -5,7 +5,17 @@
 #include "../inc/header.h"
 
 void ridesMain() {
-    
+    Ride* head = readRides();
+    Client* headClients = readClients();
+    int count;
+
+    clrscr();
+    menuHeaderRides();
+    count = listRides(head, headClients);
+    puts("");
+    showCount(count);
+    puts("");
+    enterToContinue();
 }
 
 // Insert New Ride
@@ -122,6 +132,39 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
 
         head = head->next;
     }
+}
+
+// List Rides in Console
+int listRides(Ride* head, Client* headClients) {
+    int count = 0;
+    char available[5];
+
+    while (head != NULL) {
+        printf("  %06d\t%06d\t\t%-25s\t%-25s\t%-25s\t%-7.3f\t\t\t%-7.2f\n", head->id, head->vehicle, getClientUsername(headClients, head->client), head->startLocation, head->endLocation, head->distance, head->cost);
+
+        count++;
+
+        head = head->next;
+    }
+
+    return count;
+}
+
+// List Rides of a Client in Console
+int listRidesClient(Ride* head, Client* headClients, int id) {
+    int count = 0;
+    char available[5];
+
+    while (head != NULL) {
+        if (head->id == id) {
+            printf("  %06d\t%06d\t\t%-25s\t%-25s\t%-7.3f\t\t\t%-7.2f\n", head->id, head->vehicle, head->startLocation, head->endLocation, head->distance, head->cost);
+            count++;
+        }
+
+        head = head->next;
+    }
+
+    return count;
 }
 
 // Assign an ID to a Ride based on the last Ride in the list (+1)

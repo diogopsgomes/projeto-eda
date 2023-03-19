@@ -197,12 +197,15 @@ void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery
 // List Vehicles in Console
 int listVehicles(Vehicle* head, Type* headTypes) {
     int count = 0;
-    
+    char available[5];
+
     while (head != NULL) {
-        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%s\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, head->location);
+        (head->available == 1) ? (strcpy(available, "Sim")) : (strcpy(available, "Nao"));
+
+        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%-5s\t\t%s\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, available, head->location);
 
         count++;
-        
+
         head = head->next;
     }
 
@@ -280,11 +283,26 @@ int assignVehicleId(Vehicle* head) {
     return 1;
 }
 
-// Check if a Vehicle in not in a Ride
+// Check if a Vehicle is not in a Ride
 int isVehicleAvailable(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
             if (head->available == 1) {
+                return 1;
+            }
+        }
+
+        head = head->next;
+    }
+
+    return 0;
+}
+
+// Check if a Vehicle is not out of Battery
+int isVehicleCharged(Vehicle* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) {
+            if (head->battery > 0 && head->range > 0) {
                 return 1;
             }
         }
