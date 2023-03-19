@@ -91,7 +91,7 @@ int main() {
                                                 printf("Veiculo: ");
                                                 scanf("%d", &vehicle);
                                                 if ((available = isVehicleAvailable(headVehicles, vehicle)) == 0) {
-                                                    printf("Veiculo indisponivel!");
+                                                    puts(RED"\nVeiculo indisponivel!\n"RESET);
                                                 }
                                             } while (available == 0);
 

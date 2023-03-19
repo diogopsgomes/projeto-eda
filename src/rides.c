@@ -85,7 +85,7 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
     while (head != NULL) {
         if (head->id == id) {
             head->endTime = time(NULL);
-            strcpy(head->endLocation, endLocation);
+            if (strlen(endLocation) > 0) strcpy(head->endLocation, endLocation);
 
             double timeElapsed = difftime(head->endTime, head->startTime);
             int minutesElapsed = (int) (timeElapsed / 60.0);
@@ -97,15 +97,9 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
 
             while (headVehicles != NULL) {
                 if (headVehicles->id == head->vehicle) {
-                    strcpy(headVehicles->location, endLocation);
-                    break;
-                }
-
-                headVehicles = headVehicles->next;
-            }
-
-            while (headVehicles != NULL) {
-                if (headVehicles->id == head->vehicle) {
+                    if (strlen(endLocation) > 0) strcpy(headVehicles->location, endLocation);
+                    headVehicles->range = (headVehicles->range > distance) ? (headVehicles->range - distance) : (0.0F);
+                    headVehicles->battery = headVehicles->range / 2.0F;
                     headVehicles->available = 1;
                     break;
                 }
@@ -116,14 +110,6 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
             while (headClients != NULL) {
                 if (headClients->id == head->client) {
                     headClients->balance -= cost;
-                    break;
-                }
-
-                headClients = headClients->next;
-            }
-
-            while (headClients != NULL) {
-                if (headClients->id == head->client) {
                     headClients->available = 1;
                     break;
                 }
