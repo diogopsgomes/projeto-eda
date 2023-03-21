@@ -46,7 +46,7 @@ int authClient(Client* head, char username[], char password[]) {
         head = head->next;
     }
 
-    return 0;
+    return -1;
 }
 
 /**
@@ -70,5 +70,5 @@ int authManager(Manager* head, char username[], char password[]) {
         head = head->next;
     }
 
-    return 0;
+    return -1;
 }

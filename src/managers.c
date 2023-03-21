@@ -4,7 +4,7 @@
 #include "../inc/header.h"
 
 void managersMain() {
-    int option, id, count;
+    int option, id, count, available, valid;
     char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME];
 
     do {
@@ -28,20 +28,32 @@ void managersMain() {
                 clrscr();
                 menuTitleInsertManager();
 
-                printf("Nome: ");
-                clrbuffer();
-                fgets(name, sizeof(name), stdin);
-                name[strcspn(name, "\n")] = 0;
+                do {
+                    printf("Nome: ");
+                    clrbuffer();
+                    fgets(name, sizeof(name), stdin);
+                    name[strcspn(name, "\n")] = 0;
+                } while (strlen(name) == 0);
 
-                printf("Nome de Utilizador: ");
-                clrbuffer();
-                fgets(username, sizeof(username), stdin);
-                username[strcspn(username, "\n")] = 0;
+                do {
+                    printf("Nome de Utilizador: ");
+                    clrbuffer();
+                    fgets(username, sizeof(username), stdin);
+                    username[strcspn(username, "\n")] = 0;
+                    if ((available = (existManagerUsername(head, username) == 1) ? (0) : (1)) == 0) {
+                        puts(RED"\nNome de Utilizador indisponivel!\n"RESET);
+                    }
+                } while (available == 0 || strlen(username) == 0);
                 
-                printf("Palavra-passe: ");
-                clrbuffer();
-                fgets(password, sizeof(password), stdin);
-                password[strcspn(password, "\n")] = 0;
+                do {
+                    printf("Palavra-passe: ");
+                    clrbuffer();
+                    fgets(password, sizeof(password), stdin);
+                    password[strcspn(password, "\n")] = 0;
+                    if ((valid = (strlen(password) < 6) ? (0) : (1)) == 0) {
+                        puts(RED"\nPalavra-passe invalida!\n"RESET);
+                    }
+                } while (valid == 0);
                 encrypt(password);
 
                 head = insertManager(head, assignManagerId(head), username, password, name);
@@ -59,15 +71,27 @@ void managersMain() {
                 fgets(name, sizeof(name), stdin);
                 name[strcspn(name, "\n")] = 0;
 
-                printf("Nome de Utilizador: ");
-                clrbuffer();
-                fgets(username, sizeof(username), stdin);
-                username[strcspn(username, "\n")] = 0;
+                do {
+                    printf("Nome de Utilizador: ");
+                    clrbuffer();
+                    fgets(username, sizeof(username), stdin);
+                    username[strcspn(username, "\n")] = 0;
+                    if (strlen(username) == 0) break;
+                    if ((available = (existManagerUsername(head, username) == 1) ? (0) : (1)) == 0) {
+                        puts(RED"\nNome de Utilizador indisponivel!\n"RESET);
+                    }
+                } while (available == 0);
 
-                printf("Palavra-passe: ");
-                clrbuffer();
-                fgets(password, sizeof(password), stdin);
-                password[strcspn(password, "\n")] = 0;
+                do {
+                    printf("Palavra-passe: ");
+                    clrbuffer();
+                    fgets(password, sizeof(password), stdin);
+                    password[strcspn(password, "\n")] = 0;
+                    if (strlen(password) == 0) break;
+                    if ((valid = (strlen(password) < 6) ? (0) : (1)) == 0) {
+                        puts(RED"\nPalavra-passe invalida!\n"RESET);
+                    }
+                } while (valid == 0);
                 encrypt(password);
                 
                 editManager(head, id, username, password, name);

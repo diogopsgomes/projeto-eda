@@ -10,7 +10,7 @@ int main() {
     Type* headTypes;
     Client* headClients;
     Manager* headManagers;
-    int optionA, optionB, optionC, count, nif, available, charged, ride, vehicle, user;
+    int optionA, optionB, optionC, count, valid, nif, available, charged, ride, vehicle, user;
     float balance;
     char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
 
@@ -45,7 +45,7 @@ int main() {
                             fgets(password, sizeof(password), stdin);
                             password[strcspn(password, "\n")] = 0;
 
-                            if ((user = authClient(headClients, username, password)) <= 0) {
+                            if ((user = authClient(headClients, username, password)) < 0) {
                                 puts(RED"\nO nome de utilizador ou palavra-passe estao incorretos!\n"RESET);
                                 enterToContinue();
                                 break;
@@ -179,21 +179,39 @@ int main() {
                                         fgets(name, sizeof(name), stdin);
                                         name[strcspn(name, "\n")] = 0;
 
-                                        printf("Nome de Utilizador: ");
-                                        clrbuffer();
-                                        fgets(username, sizeof(username), stdin);
-                                        username[strcspn(username, "\n")] = 0;
+                                        do {
+                                            printf("Nome de Utilizador: ");
+                                            clrbuffer();
+                                            fgets(username, sizeof(username), stdin);
+                                            username[strcspn(username, "\n")] = 0;
+                                            if (strlen(username) == 0) break;
+                                            if ((available = (existClientUsername(headClients, username) == 1) ? (0) : (1)) == 0) {
+                                                puts(RED"\nNome de Utilizador indisponivel!\n"RESET);
+                                            }
+                                        } while (available == 0);
 
-                                        printf("Palavra-passe: ");
-                                        clrbuffer();
-                                        fgets(password, sizeof(password), stdin);
-                                        password[strcspn(password, "\n")] = 0;
+                                        do {
+                                            printf("Palavra-passe: ");
+                                            clrbuffer();
+                                            fgets(password, sizeof(password), stdin);
+                                            password[strcspn(password, "\n")] = 0;
+                                            if (strlen(password) == 0) break;
+                                            if ((valid = (strlen(password) < 6) ? (0) : (1)) == 0) {
+                                                puts(RED"\nPalavra-passe invalida!\n"RESET);
+                                            }
+                                        } while (valid == 0);
                                         encrypt(password);
-
-                                        printf("NIF: ");
-                                        clrbuffer();
-                                        fgets(nifStr, sizeof(nifStr), stdin);
-                                        nifStr[strcspn(nifStr, "\n")] = 0;
+                                        
+                                        do {
+                                            printf("NIF: ");
+                                            clrbuffer();
+                                            fgets(nifStr, sizeof(nifStr), stdin);
+                                            nifStr[strcspn(nifStr, "\n")] = 0;
+                                            if (strlen(nifStr) == 0) break;
+                                            if ((valid = (strlen(nifStr) != 9) ? (0) : (1)) == 0) {
+                                                puts(RED"\nNIF invalido!\n"RESET);
+                                            }
+                                        } while (valid == 0);
                                         if (strlen(nifStr) > 0) nif = atoi(nifStr);
 
                                         printf("Morada: ");
@@ -216,29 +234,48 @@ int main() {
                             clrscr();
                             menuApp();
 
-                            printf("Nome: ");
-                            clrbuffer();
-                            fgets(name, sizeof(name), stdin);
-                            name[strcspn(name, "\n")] = 0;
+                            do {
+                                printf("Nome: ");
+                                clrbuffer();
+                                fgets(name, sizeof(name), stdin);
+                                name[strcspn(name, "\n")] = 0;
+                            } while (strlen(name) == 0);
 
-                            printf("Nome de Utilizador: ");
-                            clrbuffer();
-                            fgets(username, sizeof(username), stdin);
-                            username[strcspn(username, "\n")] = 0;
+                            do {
+                                printf("Nome de Utilizador: ");
+                                clrbuffer();
+                                fgets(username, sizeof(username), stdin);
+                                username[strcspn(username, "\n")] = 0;
+                                if ((available = (existClientUsername(headClients, username) == 1) ? (0) : (1)) == 0) {
+                                    puts(RED"\nNome de Utilizador indisponivel!\n"RESET);
+                                }
+                            } while (available == 0 || strlen(username) == 0);
                             
-                            printf("Palavra-passe: ");
-                            clrbuffer();
-                            fgets(password, sizeof(password), stdin);
-                            password[strcspn(password, "\n")] = 0;
+                            do {
+                                printf("Palavra-passe: ");
+                                clrbuffer();
+                                fgets(password, sizeof(password), stdin);
+                                password[strcspn(password, "\n")] = 0;
+                                if ((valid = (strlen(password) < 6) ? (0) : (1)) == 0) {
+                                    puts(RED"\nPalavra-passe invalida!\n"RESET);
+                                }
+                            } while (valid == 0);
                             encrypt(password);
 
-                            printf("NIF: ");
-                            scanf("%d", &nif);
+                            do {
+                                printf("NIF: ");
+                                scanf("%d", &nif);
+                                if ((valid = (nif < 100000000 || nif > 999999999) ? (0) : (1)) == 0) {
+                                    puts(RED"\nNIF invalido!\n"RESET);
+                                }
+                            } while (valid == 0);
 
-                            printf("Morada: ");
-                            clrbuffer();
-                            fgets(address, sizeof(address), stdin);
-                            address[strcspn(address, "\n")] = 0;
+                            do {
+                                printf("Morada: ");
+                                clrbuffer();
+                                fgets(address, sizeof(address), stdin);
+                                address[strcspn(address, "\n")] = 0;
+                            } while (strlen(address) == 0);
 
                             headClients = insertClient(headClients, assignClientId(headClients), username, password, name, nif, address, 0, 1);
                             saveClients(headClients);
@@ -278,7 +315,7 @@ int main() {
                             fgets(password, sizeof(password), stdin);
                             password[strcspn(password, "\n")] = 0;
 
-                            if ((user = authManager(headManagers, username, password)) <= 0) {
+                            if ((user = authManager(headManagers, username, password)) < 0) {
                                 puts(RED"\nO nome de utilizador ou palavra-passe estao incorretos.\n"RESET);
                                 enterToContinue();
                                 break;
