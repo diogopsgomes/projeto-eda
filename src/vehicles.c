@@ -129,6 +129,19 @@ void vehiclesMain() {
 }
 
 // Insert New Vehicle
+/**
+ * It inserts a new vehicle at the end of the list
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the vehicle
+ * @param type The type of the vehicle
+ * @param battery The battery of the vehicle
+ * @param range The range of the vehicle
+ * @param available 0 = not available, 1 = available
+ * @param location The location of the vehicle
+ * 
+ * @return The head of the list.
+ */
 Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, int available, char location[]) {
     Vehicle *new = malloc(sizeof(struct vehicle)), *aux = head;
 
@@ -152,6 +165,15 @@ Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float ran
 }
 
 // Remove Vehicle by ID
+/**
+ * If the list is empty, return NULL. If the first element is the one to be removed, free it and return
+ * the second element. Otherwise, find the element to be removed and free it
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the vehicle to be removed
+ * 
+ * @return The head of the list.
+ */
 Vehicle* removeVehicle(Vehicle* head, int id) {
     Vehicle *prev=head, *current=head, *aux;
 
@@ -179,6 +201,17 @@ Vehicle* removeVehicle(Vehicle* head, int id) {
 }
 
 // Edit Vehicle
+/**
+ * It edits a vehicle's information
+ * 
+ * @param head The head of the linked list
+ * @param headTypes Pointer to the first type of vehicle in the linked list
+ * @param id The id of the vehicle to edit
+ * @param type The type of vehicle
+ * @param battery The battery of the vehicle
+ * @param range The range of the vehicle
+ * @param location The location of the vehicle
+ */
 void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery, float range, char location[]) {
     while (head != NULL) {
         if (head->id == id) {
@@ -195,6 +228,14 @@ void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery
 }
 
 // List Vehicles in Console
+/**
+ * It prints a list of vehicles
+ * 
+ * @param head The head of the linked list
+ * @param headTypes Pointer to the first type of vehicle in the linked list
+ * 
+ * @return The number of vehicles in the list.
+ */
 int listVehicles(Vehicle* head, Type* headTypes) {
     int count = 0;
     char available[5];
@@ -213,6 +254,14 @@ int listVehicles(Vehicle* head, Type* headTypes) {
 }
 
 // List Vehicles in Console Ordered by Range (Descending)
+/**
+ * It sorts the linked list by range, then lists the vehicles
+ * 
+ * @param head The head of the linked list
+ * @param headTypes Pointer to the first type of vehicle in the linked list
+ * 
+ * @return The return value is the result of the function listVehicles.
+ */
 int listVehiclesByRange(Vehicle* head, Type* headTypes) {
     int swapped;
 
@@ -247,6 +296,15 @@ int listVehiclesByRange(Vehicle* head, Type* headTypes) {
     return listVehicles(head, headTypes);
 }
 
+/**
+ * It filters the linked list by location, then lists the vehicles sorted by range
+ * 
+ * @param head pointer to the first element of the linked list
+ * @param headTypes a linked list of types
+ * @param location The location of the vehicle
+ * 
+ * @return The return value is the number of vehicles that were listed.
+ */
 int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]) {
     Vehicle* filtered = NULL;
 
@@ -262,6 +320,14 @@ int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]) {
 }
 
 // Check if Vehicle ID exists
+/**
+ * It returns 1 if the vehicle with the given id exists in the list, otherwise it returns 0
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the vehicle to be added
+ * 
+ * @return 1 if the vehicle exists in the list, otherwise it returns 0.
+ */
 int existVehicle(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) return 1;
@@ -273,6 +339,13 @@ int existVehicle(Vehicle* head, int id) {
 }
 
 // Assign an ID to a Vehicle based on the last Vehicle in the list (+1)
+/**
+ * It returns the next available vehicle id
+ * 
+ * @param head The head of the linked list
+ * 
+ * @return The next available ID number.
+ */
 int assignVehicleId(Vehicle* head) {
     while (head != NULL) {
         if (head->next == NULL) return head->id + 1;
@@ -284,6 +357,14 @@ int assignVehicleId(Vehicle* head) {
 }
 
 // Check if a Vehicle is not in a Ride
+/**
+ * It checks if a vehicle is available
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the vehicle to check
+ * 
+ * @return 1 if the vehicle is available, otherwise it returns 0.
+ */
 int isVehicleAvailable(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
@@ -299,6 +380,14 @@ int isVehicleAvailable(Vehicle* head, int id) {
 }
 
 // Check if a Vehicle is not out of Battery
+/**
+ * It checks if the vehicle is charged and has a range greater than 0
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the vehicle to check
+ * 
+ * @return 1 if the vehicle has any battery, otherwise it returns 0.
+ */
 int isVehicleCharged(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
@@ -314,6 +403,14 @@ int isVehicleCharged(Vehicle* head, int id) {
 }
 
 // Copy linked list
+/**
+ * It creates a new linked list, and copies the contents of the original linked list into the new
+ * linked list
+ * 
+ * @param head The head of the linked list
+ * 
+ * @return The head of the copied linked list.
+ */
 Vehicle* copyLinkedList(Vehicle* head) {
     Vehicle* copy = NULL;
     while (head != NULL) {
@@ -324,6 +421,13 @@ Vehicle* copyLinkedList(Vehicle* head) {
 }
 
 // Save Vehicles in File
+/**
+ * It saves the vehicles to a file
+ * 
+ * @param head The head of the linked list
+ * 
+ * @return 1 if the file was successfully saved, and 0 if it was not.
+ */
 int saveVehicles(Vehicle* head) {
     FILE* fp;
     fp = fopen(DATA_DIR"vehicles.txt", "w");
@@ -341,6 +445,11 @@ int saveVehicles(Vehicle* head) {
 }
 
 // Read Vehicles from File
+/**
+ * It reads a file and inserts the data into a linked list
+ * 
+ * @return A pointer to a Vehicle struct.
+ */
 Vehicle* readVehicles() {
     FILE* fp;
     fp = fopen(DATA_DIR"vehicles.txt", "r");
@@ -370,6 +479,16 @@ Vehicle* readVehicles() {
 }
 
 // Get Type Cost from Type ID
+/**
+ * It loops through the linked list of vehicles, and if the vehicle's id matches the id passed in, it
+ * returns the cost of the vehicle's type
+ * 
+ * @param head The head of the linked list of vehicles
+ * @param headTypes The head of the linked list of types
+ * @param id The id of the vehicle you want to get the cost of.
+ * 
+ * @return The cost of the vehicle.
+ */
 float getVehicleCost(Vehicle* head, Type* headTypes, int id) {
     while (head != NULL) {
         if (head->id == id) return getTypeCost(headTypes, head->type);
@@ -381,6 +500,14 @@ float getVehicleCost(Vehicle* head, Type* headTypes, int id) {
 }
 
 // Get Type Cost from Type ID
+/**
+ * It returns the cost of a type with a given id
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the type you want to get the cost of.
+ * 
+ * @return The cost of the type with the given id.
+ */
 float getTypeCost(Type* head, int id) {
     while (head != NULL) {
         if (head->id == id) return head->cost;
@@ -392,6 +519,14 @@ float getTypeCost(Type* head, int id) {
 }
 
 // Get Type Name from Type ID
+/**
+ * It returns the name of the type with the given id, or "*********" if the type doesn't exist
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the type you want to get the name of.
+ * 
+ * @return The name of the type with the given id.
+ */
 char* getTypeName(Type* head, int id) {
     while (head != NULL) {
         if (head->id == id) return head->name;
@@ -403,8 +538,18 @@ char* getTypeName(Type* head, int id) {
 }
 
 // Insert Type of Vehicle
+/**
+ * It inserts a new client at the end of the list
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the type of vehicle
+ * @param name The name of the type of vehicle
+ * @param cost The cost of the type of vehicle
+ * 
+ * @return The head of the list.
+ */
 Type* insertType(Type* head, int id, char name[], float cost) {
-    Type *new = malloc(sizeof(struct type)), *prev;
+    Type *new = malloc(sizeof(struct type)), *aux = head;
 
     if (new != NULL) {
         new->id = id;
@@ -415,14 +560,21 @@ Type* insertType(Type* head, int id, char name[], float cost) {
 
     if (head == NULL) return new;
 
-    for (prev = head; prev->next != NULL; prev = prev->next);
+    while (aux->next != NULL) aux = aux->next;
 
-    prev->next = new;
+    aux->next = new;
 
 	return head;
 }
 
 // List Type of Vehicles in Console
+/**
+ * It prints the contents of a linked list of types
+ * 
+ * @param head The head of the linked list
+ * 
+ * @return The number of items in the list.
+ */
 int listTypes(Type* head) {
     if (head != NULL) {
         while (head != NULL) {
@@ -437,6 +589,14 @@ int listTypes(Type* head) {
 }
 
 // Check if Type ID exists
+/**
+ * It checks if a type with the given id exists in the list
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the type
+ * 
+ * @return 1 if the type exists in the list, otherwise it returns 0.
+ */
 int existType(Type* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
@@ -450,6 +610,13 @@ int existType(Type* head, int id) {
 }
 
 // Save Types in File
+/**
+ * It saves the types to a file
+ * 
+ * @param head The head of the linked list
+ * 
+ * @return 1 if the file was saved successfully, or 0 if it wasn't.
+ */
 int saveTypes(Type* head) {
     FILE* fp;
     fp = fopen(DATA_DIR"types.txt", "w");
@@ -467,6 +634,11 @@ int saveTypes(Type* head) {
 }
 
 // Read Types from File
+/**
+ * It reads a file and inserts the data into a linked list
+ * 
+ * @return A pointer to a Type struct.
+ */
 Type* readTypes() {
     FILE* fp;
     fp = fopen(DATA_DIR"types.txt", "r");
