@@ -8,12 +8,11 @@
 #define SIZE_NAME 60
 #define SIZE_ADDRESS 150
 #define SIZE_LOCATION 60
-
 #define SIZE_TYPE 5
 #define SIZE_BATTERY 15
 #define SIZE_RANGE 15
-
 #define SIZE_NIF 15
+#define SIZE_DATETIME 20
 
 #define RED     "\x1B[31m"
 #define GREEN   "\x1B[32m"
@@ -83,7 +82,7 @@ typedef struct ride {
 
 /*Rides*/
 void ridesMain();
-Ride* insertRide(Ride* head, Vehicle* headVehicles, Type* headTypes, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance);
+Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance);
 Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, int vehicle, int client);
 void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, char endLocation[]);
 int listRides(Ride* head, Client* headClients);

@@ -129,7 +129,7 @@ int main() {
                                         menuHeaderRidesClient();
 
                                         if ((count = listRidesClient(headRides, headClients, user)) == 0) {
-                                            puts("\n                                                        Nao existem viagens registadas!                                                         \n");
+                                            puts("\n                                                             Nao existem viagens registadas!                                                             \n");
                                         } else {
                                             puts("");
                                             showCount(count);

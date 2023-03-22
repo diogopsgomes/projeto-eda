@@ -23,8 +23,6 @@ void ridesMain() {
  * It inserts a new ride into the linked list of rides
  * 
  * @param head The head of the linked list
- * @param headVehicles Pointer to the first vehicle in the linked list
- * @param headTypes Pointer to the first type of vehicle in the linked list
  * @param id The id of the ride
  * @param vehicle The id of the vehicle
  * @param client The id of the client
@@ -37,10 +35,10 @@ void ridesMain() {
  * 
  * @return The head of the list.
  */
-Ride* insertRide(Ride* head, Vehicle* headVehicles, Type* headTypes, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance) {
+Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance) {
     Ride *new = malloc(sizeof(struct ride)), *aux = head;
 
-    if (new == NULL || headVehicles == NULL || headTypes == NULL) return head;
+    if (new == NULL) return head;
 
     new->id = id;
     new->vehicle = vehicle;
@@ -81,8 +79,6 @@ Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* head
     
     char startLocation[SIZE_LOCATION];
 
-    head = insertRide(head, headVehicles, headTypes, assignRideId(head), vehicle, client, -1, -1, startLocation, "NULL", -1, -1);
-
     while (headVehicles != NULL) {
         if (headVehicles->id == vehicle) {
             strcpy(startLocation, headVehicles->location);
@@ -101,6 +97,8 @@ Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* head
 
         headClients = headClients->next;
     }
+
+    head = insertRide(head, assignRideId(head), vehicle, client, -1, -1, startLocation, "NULL", -1, -1);
 
     return head;
 }
@@ -173,10 +171,13 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
  */
 int listRides(Ride* head, Client* headClients) {
     int count = 0;
-    char available[5];
+    char startTimeStr[SIZE_DATETIME], endTimeStr[SIZE_DATETIME];
 
     while (head != NULL) {
-        printf("  %06d\t%06d\t\t%-25s\t%-25s\t%-25s\t%-7.3f\t\t\t%-7.2f\n", head->id, head->vehicle, getClientUsername(headClients, head->client), head->startLocation, head->endLocation, head->distance, head->cost);
+        strftime(startTimeStr, sizeof(startTimeStr), "%d/%m/%Y %H:%M", localtime(&head->startTime));
+        strftime(endTimeStr, sizeof(endTimeStr), "%d/%m/%Y %H:%M", localtime(&head->endTime));
+
+        printf("  %06d\t%06d\t\t%-23s\t%-16s\t%-16s\t%-23s\t%-23s\t%-7.3f\t\t%-7.2f\n", head->id, head->vehicle, getClientUsername(headClients, head->client), startTimeStr, endTimeStr, head->startLocation, head->endLocation, head->distance, head->cost);
 
         count++;
 
@@ -198,11 +199,15 @@ int listRides(Ride* head, Client* headClients) {
  */
 int listRidesClient(Ride* head, Client* headClients, int id) {
     int count = 0;
-    char available[5];
+    char startTimeStr[SIZE_DATETIME], endTimeStr[SIZE_DATETIME];
 
     while (head != NULL) {
-        if (head->id == id) {
-            printf("  %06d\t%06d\t\t%-25s\t%-25s\t%-7.3f\t\t\t%-7.2f\n", head->id, head->vehicle, head->startLocation, head->endLocation, head->distance, head->cost);
+        if (head->client == id) {
+            strftime(startTimeStr, sizeof(startTimeStr), "%d/%m/%Y %H:%M", localtime(&head->startTime));
+            strftime(endTimeStr, sizeof(endTimeStr), "%d/%m/%Y %H:%M", localtime(&head->endTime));
+
+            printf("  %06d\t%06d\t\t%-16s\t%-16s\t%-23s\t%-23s\t%-7.3f\t\t%-7.2f\n", head->id, head->vehicle, startTimeStr, endTimeStr, head->startLocation, head->endLocation, head->distance, head->cost);
+
             count++;
         }
 
@@ -258,8 +263,13 @@ int currentRide(Ride* head, int id) {
 void showRide(Ride* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
-            printf("Inicio: %d\n", head->startTime);
-            printf("Fim: %d\n", head->endTime);
+            char startTimeStr[SIZE_DATETIME], endTimeStr[SIZE_DATETIME];
+
+            strftime(startTimeStr, sizeof(startTimeStr), "%d/%m/%Y %H:%M", localtime(&head->startTime));
+            strftime(endTimeStr, sizeof(endTimeStr), "%d/%m/%Y %H:%M", localtime(&head->endTime));
+
+            printf("Inicio: %s\n", startTimeStr);
+            printf("Fim: %s\n", endTimeStr);
             printf("Total: %.2f\n", head->cost);
             printf("Partida: %s\n", head->startLocation);
             printf("Destino: %s\n", head->endLocation);
@@ -323,7 +333,7 @@ Ride* readRides() {
 
     while (!feof(fp)) {
         fscanf(fp, "%d;%d;%d;%d;%d;%[^;];%[^;];%f;%f\n", &id, &vehicle, &client, &startTime, &endTime, &startLocation, &endLocation, &cost, &distance);
-        aux = insertRide(aux, NULL, NULL, id, vehicle, client, startTime, endTime, startLocation, endLocation, cost, distance);
+        aux = insertRide(aux, id, vehicle, client, startTime, endTime, startLocation, endLocation, cost, distance);
     }
 
     fclose(fp);
