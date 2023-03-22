@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['listclient_0',['listClient',['../header_8h.html#afea74fac61f3ed40f0fd5e4d31cc3425',1,'listClient(Client *head, int id):&#160;clients.c'],['../clients_8c.html#afea74fac61f3ed40f0fd5e4d31cc3425',1,'listClient(Client *head, int id):&#160;clients.c']]],
+  ['listclients_1',['listClients',['../header_8h.html#a2eeb39127eb47e76cafa7be1a85ae04d',1,'listClients(Client *head):&#160;clients.c'],['../clients_8c.html#a2eeb39127eb47e76cafa7be1a85ae04d',1,'listClients(Client *head):&#160;clients.c']]],
+  ['listmanagers_2',['listManagers',['../header_8h.html#a752d2705330ef0871edf6f32f86d5f1c',1,'listManagers(Manager *head):&#160;managers.c'],['../managers_8c.html#a752d2705330ef0871edf6f32f86d5f1c',1,'listManagers(Manager *head):&#160;managers.c']]],
+  ['listrides_3',['listRides',['../header_8h.html#a5be251f60a958542ab7b4131d929a73a',1,'listRides(Ride *head, Client *headClients):&#160;rides.c'],['../rides_8c.html#a5be251f60a958542ab7b4131d929a73a',1,'listRides(Ride *head, Client *headClients):&#160;rides.c']]],
+  ['listridesclient_4',['listRidesClient',['../header_8h.html#a014de79478ee712a4ece4f900b2f5bb3',1,'listRidesClient(Ride *head, Client *headClients, int id):&#160;rides.c'],['../rides_8c.html#a014de79478ee712a4ece4f900b2f5bb3',1,'listRidesClient(Ride *head, Client *headClients, int id):&#160;rides.c']]],
+  ['listtypes_5',['listTypes',['../header_8h.html#aeff5630fe476db043c9382e9b3d90f29',1,'listTypes(Type *head):&#160;vehicles.c'],['../vehicles_8c.html#aeff5630fe476db043c9382e9b3d90f29',1,'listTypes(Type *head):&#160;vehicles.c']]],
+  ['listvehicles_6',['listVehicles',['../header_8h.html#a497994528c1a1a791cba473137350ee2',1,'listVehicles(Vehicle *head, Type *headTypes):&#160;vehicles.c'],['../vehicles_8c.html#a497994528c1a1a791cba473137350ee2',1,'listVehicles(Vehicle *head, Type *headTypes):&#160;vehicles.c']]],
+  ['listvehiclesbylocation_7',['listVehiclesByLocation',['../header_8h.html#a8ed9c212b6dc03172c62c030e47abb37',1,'listVehiclesByLocation(Vehicle *head, Type *headTypes, char location[]):&#160;vehicles.c'],['../vehicles_8c.html#a8ed9c212b6dc03172c62c030e47abb37',1,'listVehiclesByLocation(Vehicle *head, Type *headTypes, char location[]):&#160;vehicles.c']]],
+  ['listvehiclesbyrange_8',['listVehiclesByRange',['../header_8h.html#aa1a5828d88a3cff349cdc60184146fe9',1,'listVehiclesByRange(Vehicle *head, Type *headTypes):&#160;vehicles.c'],['../vehicles_8c.html#aa1a5828d88a3cff349cdc60184146fe9',1,'listVehiclesByRange(Vehicle *head, Type *headTypes):&#160;vehicles.c']]]
+];
