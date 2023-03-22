@@ -87,6 +87,12 @@ int main() {
                                         menuMainClientsLine();
 
                                         if (available == 1) {
+                                            if (hasBalance(headClients, user) == 0) {
+                                                puts(RED"\nSaldo insuficiente!\n"RESET);
+                                                enterToContinue();
+                                                break;
+                                            }
+
                                             do {
                                                 printf("Veiculo: ");
                                                 scanf("%d", &vehicle);

@@ -625,10 +625,23 @@ int saveTypes(Type* head) {
 
     while (head != NULL) {
         fprintf(fp, "%d;%s;%f\n", head->id, head->name, head->cost);
+        
         head = head->next;
     }
 
     fclose(fp);
+
+    fp = fopen(DATA_DIR"types.bin", "wb");
+
+    if (fp != NULL) {
+        while (head != NULL) {
+            fwrite(head, sizeof(struct type), 1, fp);
+
+            head = head->next;
+        }
+
+        fclose(fp);
+    }
 
     return 1;
 }

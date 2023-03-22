@@ -319,10 +319,23 @@ int saveManagers(Manager* head) {
 
     while (head != NULL) {
         fprintf(fp, "%d;%s;%s;%s\n", head->id, head->username, head->password, head->name);
+        
         head = head->next;
     }
 
     fclose(fp);
+
+    fp = fopen(DATA_DIR"managers.bin", "wb");
+
+    if (fp != NULL) {
+        while (head != NULL) {
+            fwrite(head, sizeof(struct manager), 1, fp);
+
+            head = head->next;
+        }
+
+        fclose(fp);
+    }
 
     return 1;
 }

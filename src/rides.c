@@ -298,10 +298,23 @@ int saveRides(Ride* head) {
 
     while (head != NULL) {
         fprintf(fp, "%d;%d;%d;%d;%d;%s;%s;%f;%f\n", head->id, head->vehicle, head->client, head->startTime, head->endTime, head->startLocation, head->endLocation, head->cost, head->distance);
+        
         head = head->next;
     }
 
     fclose(fp);
+
+    fp = fopen(DATA_DIR"rides.bin", "wb");
+
+    if (fp != NULL) {
+        while (head != NULL) {
+            fwrite(head, sizeof(struct ride), 1, fp);
+
+            head = head->next;
+        }
+
+        fclose(fp);
+    }
 
     return 1;
 }

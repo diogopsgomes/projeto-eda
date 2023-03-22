@@ -133,6 +133,7 @@ int isClientAvailable(Client* head, int id);
 void addBalance(Client* head, int id, float balance);
 void removeBalance(Client* head, int id, float balance);
 void editBalance(Client* head, int id, float balance);
+int hasBalance(Client* head, int id);
 int saveClients(Client* head);
 Client* readClients();
 

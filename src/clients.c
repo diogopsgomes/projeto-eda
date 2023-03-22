@@ -396,9 +396,7 @@ int assignClientId(Client* head) {
 int isClientAvailable(Client* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
-            if (head->available == 1) {
-                return 1;
-            }
+            if (head->available == 1) return 1;
         }
 
         head = head->next;
@@ -433,13 +431,7 @@ void addBalance(Client* head, int id, float balance) {
  */
 void removeBalance(Client* head, int id, float balance) {
     while (head != NULL) {
-        if (head->id == id) {
-            if (head->balance > balance) {
-                head->balance -= balance;
-            } else {
-                head->balance = 0;
-            }
-        }
+        if (head->id == id) head->balance = (head->balance > balance) ? (head->balance -= balance) : (head->balance = 0);
         
         head = head->next;
     }
@@ -456,10 +448,35 @@ void removeBalance(Client* head, int id, float balance) {
  */
 void editBalance(Client* head, int id, float balance) {
     while (head != NULL) {
-        if (head->id == id) head->balance = balance;
+        if (head->id == id) {
+            head->balance = balance;
+            break;
+        }
         
         head = head->next;
     }
+}
+
+// Check if a Client has Balance
+/**
+ * If the client with the given id has a balance greater than 0, return 1, otherwise return 0
+ * 
+ * @param head The head of the linked list
+ * @param id The id of the client
+ * 
+ * @return The value of the boolean expression.
+ */
+int hasBalance(Client* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) {
+            if (head->balance > 0) return 1;
+            break;
+        }
+        
+        head = head->next;
+    }
+
+    return 0;
 }
 
 // Save Clients in File
@@ -478,10 +495,23 @@ int saveClients(Client* head) {
 
     while (head != NULL) {
         fprintf(fp, "%d;%s;%s;%s;%d;%s;%f;%d\n", head->id, head->username, head->password, head->name, head->nif, head->address, head->balance, head->available);
+        
         head = head->next;
     }
 
     fclose(fp);
+
+    fp = fopen(DATA_DIR"clientes.bin", "wb");
+
+    if (fp != NULL) {
+        while (head != NULL) {
+            fwrite(head, sizeof(struct client), 1, fp);
+
+            head = head->next;
+        }
+
+        fclose(fp);
+    }
 
     return 1;
 }
