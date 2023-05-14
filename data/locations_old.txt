@@ -1,0 +1,34 @@
+1;chefes.caiu.sublinho;UCSP Barcelos/Alheira
+2;chia.tigela.palmitos;Escola Secundaria de Barcelos
+3;clarinetistas.gosta.sorrimos;Burger King Barcelos
+4;conta.mumias.bolota;Central Camionagem Barcelos
+5;entrelinha.resolvidas.fixo;Instituto Politecnico do Cavado e do Ave (IPCA)
+6;evolucao.adido.vitorioso;Estadio Cidade de Barcelos
+7;faco.fato.coluna;GNR de Barcelos
+8;gentis.osso.valsa;Camara Municipal Barcelos
+9;juntou.polvo.afinal;McDonalds Barcelos
+10;juta.grelha.ticos;PSP de Barcelos
+11;oboista.canais.natacao;Junta de Freguesia de Barcelos
+12;raios.salao.entendo;Bombeiros Voluntarios de Barcelos
+13;regua.vinco.velho;Piscinas Municipais de Barcelos
+14;tirei.manhas.lagoa;Pavilhao Municipal de Barcelos
+15;tropa.ocio.garota;Parque Municipal de Barcelos
+16;unioes.gotinha.apical;Hospital Santa Maria Maior E.P.E.
+17;uteis.margem.forem;Estacao CP - Barcelos
+
+1;2;4.600
+2;3;2.800
+3;4;1.800
+4;5;4.000
+5;6;2.900
+6;7;3.900
+7;8;0.600
+8;9;2.400
+9;10;1.200
+10;11;0.800
+11;12;1.100
+12;13;0.900
+13;14;1.000
+14;15;0.069
+15;16;0.180
+16;17;1.100

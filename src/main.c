@@ -6,10 +6,11 @@
 
 int main() {
     Ride* headRides;
-    Vehicle* headVehicles, *headVehiclesSorted;
+    Vehicle* headVehicles, * headVehiclesSorted;
     Type* headTypes;
     Client* headClients;
     Manager* headManagers;
+    Vertice* headVertices;
     int optionA, optionB, optionC, count, valid, nif, available, charged, ride, vehicle, user;
     float balance;
     char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
@@ -107,7 +108,7 @@ int main() {
                                             headRides = startRide(headRides, headVehicles, headTypes, headClients, assignRideId(headRides), vehicle, user);
 
                                             puts(GREEN"\nBoa Viagem!\n"RESET);
-                                            enterToContinue();                                            
+                                            enterToContinue();
                                         } else {
                                             printf("Localizacao: ");
                                             clrbuffer();
@@ -207,7 +208,7 @@ int main() {
                                             }
                                         } while (valid == 0);
                                         encrypt(password);
-                                        
+
                                         do {
                                             printf("NIF: ");
                                             clrbuffer();
@@ -224,7 +225,7 @@ int main() {
                                         clrbuffer();
                                         fgets(address, sizeof(address), stdin);
                                         address[strcspn(address, "\n")] = 0;
-                                        
+
                                         editClient(headClients, user, username, password, name, nif, address);
                                         saveClients(headClients);
 
@@ -256,7 +257,7 @@ int main() {
                                     puts(RED"\nNome de Utilizador indisponivel!\n"RESET);
                                 }
                             } while (available == 0 || strlen(username) == 0);
-                            
+
                             do {
                                 printf("Palavra-passe: ");
                                 clrbuffer();
@@ -293,7 +294,7 @@ int main() {
                         default:
                             break;
                     }
-                    
+
                 } while (optionB != 0);
 
                 break;
@@ -361,6 +362,15 @@ int main() {
                 } while (optionB != 0);
 
                 break;
+            case 3:
+                headVertices = createGraph();
+
+                puts("----------------------------------------");
+                puts("Localizacoes adjacentes a tatica.ideia.mornos:\n");
+                listAdjacents(headVertices, "tatica.ideia.morno");
+                puts("----------------------------------------");
+
+                enterToContinue();
             default:
                 break;
         }

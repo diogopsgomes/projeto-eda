@@ -32,7 +32,7 @@ void enterToContinue() {
 // Show the amount of results displayed
 /**
  * It prints a message to the user, telling them how many results were found
- * 
+ *
  * @param count The number of results to be shown.
  */
 void showCount(int count) {

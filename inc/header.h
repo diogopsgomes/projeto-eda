@@ -80,6 +80,21 @@ typedef struct ride {
 
 } Ride;
 
+typedef struct adjacent {
+    char id[SIZE_LOCATION];
+    float distance;
+    struct adjacent* next;
+
+} Adjacent;
+
+typedef struct vertice {
+    char id[SIZE_LOCATION];
+    char name[SIZE_LOCATION];
+    struct adjacent* adjacents;
+    struct vertice* next;
+
+} Vertice;
+
 /*Rides*/
 void ridesMain();
 Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance);
@@ -116,6 +131,13 @@ int listTypes(Type* head);
 int existType(Type* head, int id);
 int saveTypes(Type* head);
 Type* readTypes();
+
+/*Locations*/
+Vertice* createVertice(Vertice* head, char id[], char name[]);
+int existVertice(Vertice* head, char id[]);
+Vertice* createEdge(Vertice* head, char origin[], char destination[], float distance);
+void listAdjacents(Vertice* head, char id[]);
+Vertice* createGraph();
 
 /*Clients*/
 void clientsMain();

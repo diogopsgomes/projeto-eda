@@ -131,20 +131,17 @@ void menuHeaderManagers() {
     printf(RESET);
 }
 
-void menuFooterRides()
-{
+void menuFooterRides() {
     puts("-----------------------------------------------------------------------------------------------------------------");
     printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }
 
-void menuFooterVehicles()
-{
+void menuFooterVehicles() {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
     printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Listar por Autonomia | 5 - Listar por Localizacao | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }
 
-void menuFooterClients()
-{
+void menuFooterClients() {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
     printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Adicionar Saldo | 5 - Remover Saldo | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }

@@ -44,7 +44,7 @@ void managersMain() {
                         puts(RED"\nNome de Utilizador indisponivel!\n"RESET);
                     }
                 } while (available == 0 || strlen(username) == 0);
-                
+
                 do {
                     printf("Palavra-passe: ");
                     clrbuffer();
@@ -93,7 +93,7 @@ void managersMain() {
                     }
                 } while (valid == 0);
                 encrypt(password);
-                
+
                 editManager(head, id, username, password, name);
                 saveManagers(head);
 
@@ -116,17 +116,17 @@ void managersMain() {
 // Insert New Manager
 /**
  * It inserts a new manager at the end of the list
- * 
+ *
  * @param head The head of the linked list
  * @param id The id
  * @param username The username
  * @param password The password
  * @param name The name
- * 
+ *
  * @return The head of the list.
  */
 Manager* insertManager(Manager* head, int id, char username[], char password[], char name[]) {
-    Manager *new = malloc(sizeof(struct manager)), *aux = head;
+    Manager* new = malloc(sizeof(struct manager)), * aux = head;
 
     if (new != NULL) {
         new->id = id;
@@ -142,21 +142,21 @@ Manager* insertManager(Manager* head, int id, char username[], char password[], 
 
     aux->next = new;
 
-	return head;
+    return head;
 }
 
 // Remove Manager by ID
 /**
  * If the list is empty, return NULL. If the first element is the one to be removed, remove it and
  * return the new head. Otherwise, find the element to be removed and remove it
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the manager to be removed
- * 
+ *
  * @return The head of the list.
  */
 Manager* removeManager(Manager* head, int id) {
-    Manager *prev=head, *current=head, *aux;
+    Manager* prev = head, * current = head, * aux;
 
     if (current == NULL) {
         return NULL;
@@ -184,7 +184,7 @@ Manager* removeManager(Manager* head, int id) {
 // Edit Manager
 /**
  * It's a function that edits a manager's information
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the manager to edit
  * @param username The username
@@ -208,9 +208,9 @@ void editManager(Manager* head, int id, char username[], char password[], char n
 // List Managers in Console
 /**
  * It prints the id, name, and username of each manager in the list
- * 
+ *
  * @param head The head of the linked list
- * 
+ *
  * @return The number of managers in the list.
  */
 int listManagers(Manager* head) {
@@ -231,10 +231,10 @@ int listManagers(Manager* head) {
 /**
  * It returns the name of the manager with the given id, or "*********" if no manager with that id
  * exists
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the manager you want to get the name of
- * 
+ *
  * @return The name of the manager with the given id.
  */
 char* getManagerName(Manager* head, int id) {
@@ -250,10 +250,10 @@ char* getManagerName(Manager* head, int id) {
 // Check if Username is already in use
 /**
  * It returns 1 if the username exists in the linked list, otherwise it returns 0
- * 
+ *
  * @param head The head of the linked list
  * @param username The username
- * 
+ *
  * @return 1 if the username exists in the list, otherwise it returns 0.
  */
 int existManagerUsername(Manager* head, char username[]) {
@@ -269,10 +269,10 @@ int existManagerUsername(Manager* head, char username[]) {
 // Check if Manager ID exists
 /**
  * It checks if a manager with the given id exists in the list
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the manager
- * 
+ *
  * @return 1 if the manager exists in the list, otherwise it returns 0.
  */
 int existManager(Manager* head, int id) {
@@ -288,9 +288,9 @@ int existManager(Manager* head, int id) {
 // Assign an ID to a Manager based on the last Manager in the list (+1)
 /**
  * It returns the next available manager id.
- * 
+ *
  * @param head The head of the linked list
- * 
+ *
  * @return The id of the last manager in the list.
  */
 int assignManagerId(Manager* head) {
@@ -306,9 +306,9 @@ int assignManagerId(Manager* head) {
 // Save Managers in File
 /**
  * It saves the managers to a file
- * 
+ *
  * @param head The head of the linked list
- * 
+ *
  * @return 1 if the file was saved successfully, and 0 if it wasn't.
  */
 int saveManagers(Manager* head) {
@@ -319,7 +319,7 @@ int saveManagers(Manager* head) {
 
     while (head != NULL) {
         fprintf(fp, "%d;%s;%s;%s\n", head->id, head->username, head->password, head->name);
-        
+
         head = head->next;
     }
 
@@ -343,7 +343,7 @@ int saveManagers(Manager* head) {
 // Read Managers from File
 /**
  * It reads a file and creates a linked list of managers
- * 
+ *
  * @return A pointer to a Manager struct.
  */
 Manager* readManagers() {

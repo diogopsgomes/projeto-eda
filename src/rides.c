@@ -21,7 +21,7 @@ void ridesMain() {
 // Insert Ride
 /**
  * It inserts a new ride into the linked list of rides
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the ride
  * @param vehicle The id of the vehicle
@@ -32,11 +32,11 @@ void ridesMain() {
  * @param endLocation The end location of the ride
  * @param cost The cost of the ride
  * @param distance The distance of the ride
- * 
+ *
  * @return The head of the list.
  */
 Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance) {
-    Ride *new = malloc(sizeof(struct ride)), *aux = head;
+    Ride* new = malloc(sizeof(struct ride)), * aux = head;
 
     if (new == NULL) return head;
 
@@ -63,7 +63,7 @@ Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int
 // Start New Ride
 /**
  * It takes a ride, a vehicle, a type, a client, and an id, and returns a ride
- * 
+ *
  * @param head The head of the linked list
  * @param headVehicles Pointer to the first vehicle in the linked list
  * @param headTypes Pointer to the first type of vehicle in the linked list
@@ -71,12 +71,12 @@ Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int
  * @param id The id of the ride
  * @param vehicle The id of the vehicle
  * @param client The id of the client
- * 
+ *
  * @return The head of the list.
  */
 Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, int vehicle, int client) {
     if (headVehicles == NULL || headTypes == NULL || headClients == NULL) return head;
-    
+
     char startLocation[SIZE_LOCATION];
 
     while (headVehicles != NULL) {
@@ -107,7 +107,7 @@ Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* head
 /**
  * It takes a ride, a vehicle, a type, a client, an id, and an end location, and then it sets the end
  * time, end location, cost, distance, and range of the ride
- * 
+ *
  * @param head The head of the linked list
  * @param headVehicles Pointer to the first vehicle in the linked list
  * @param headTypes Pointer to the first type of vehicle in the linked list
@@ -124,7 +124,7 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
             if (strlen(endLocation) > 0) strcpy(head->endLocation, endLocation);
 
             double timeElapsed = difftime(head->endTime, head->startTime);
-            int minutesElapsed = (int) (timeElapsed / 60.0);
+            int minutesElapsed = (int)(timeElapsed / 60.0);
             float cost = getVehicleCost(headVehicles, headTypes, head->vehicle) * minutesElapsed;
             head->cost = cost;
 
@@ -163,10 +163,10 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
 // List Rides in Console
 /**
  * It prints the list of rides
- * 
+ *
  * @param head The head of the linked list
  * @param headClients Pointer to the first client in the linked list
- * 
+ *
  * @return The number of rides in the list.
  */
 int listRides(Ride* head, Client* headClients) {
@@ -190,11 +190,11 @@ int listRides(Ride* head, Client* headClients) {
 // List Rides of a Client in Console
 /**
  * It prints out the rides of a client
- * 
+ *
  * @param head The head of the linked list
  * @param headClients Pointer to the first node of the clients linked list
  * @param id The id of the client
- * 
+ *
  * @return The number of rides that the client has.
  */
 int listRidesClient(Ride* head, Client* headClients, int id) {
@@ -220,9 +220,9 @@ int listRidesClient(Ride* head, Client* headClients, int id) {
 // Assign an ID to a Ride based on the last Ride in the list (+1)
 /**
  * It returns the next available ride id
- * 
+ *
  * @param head The head of the linked list
- * 
+ *
  * @return The next available ride id.
  */
 int assignRideId(Ride* head) {
@@ -238,10 +238,10 @@ int assignRideId(Ride* head) {
 // Returns the ID of the current Ride of a Client
 /**
  * It returns the id of the ride that the client is currently on, or -1 if the client is not on a ride
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the client
- * 
+ *
  * @return The id of the ride that the client is currently on.
  */
 int currentRide(Ride* head, int id) {
@@ -256,7 +256,7 @@ int currentRide(Ride* head, int id) {
 
 /**
  * It prints the information of a ride given its id
- * 
+ *
  * @param head The head of the linked list
  * @param id The id of the ride
  */
@@ -285,9 +285,9 @@ void showRide(Ride* head, int id) {
 // Save Rides in File
 /**
  * It saves the linked list of rides to a file
- * 
+ *
  * @param head The head of the linked list
- * 
+ *
  * @return 1 if the file was saved successfully, and 0 if it wasn't.
  */
 int saveRides(Ride* head) {
@@ -298,7 +298,7 @@ int saveRides(Ride* head) {
 
     while (head != NULL) {
         fprintf(fp, "%d;%d;%d;%d;%d;%s;%s;%f;%f\n", head->id, head->vehicle, head->client, head->startTime, head->endTime, head->startLocation, head->endLocation, head->cost, head->distance);
-        
+
         head = head->next;
     }
 
@@ -322,7 +322,7 @@ int saveRides(Ride* head) {
 // Read Rides from File
 /**
  * It reads a file and inserts the data into a linked list
- * 
+ *
  * @return A pointer to a Ride struct.
  */
 Ride* readRides() {
@@ -331,7 +331,7 @@ Ride* readRides() {
     Ride* aux = NULL;
 
     if (fp == NULL) return aux;
-    
+
     int c = fgetc(fp);
     if (c == EOF) {
         fclose(fp);
