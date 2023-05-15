@@ -36,13 +36,15 @@ int existVertice(Vertice* head, char id[]) {
 }
 
 Vertice* createEdge(Vertice* head, char origin[], char destination[], float distance) {
-    if (!existVertice(head, origin) || !existVertice(head, destination)) return 0;
+    if (!existVertice(head, origin) || !existVertice(head, destination)) return head;
+
+    Vertice* aux = head;
 
     while (strcmp(head->id, origin) != 0) head = head->next;
 
     Adjacent* new = malloc(sizeof(struct adjacent));
 
-    if (new == NULL) return 0;
+    if (new == NULL) return aux;
 
     strcpy(new->id, destination);
     new->distance = distance;
@@ -50,20 +52,24 @@ Vertice* createEdge(Vertice* head, char origin[], char destination[], float dist
 
     if (head->adjacents == NULL) {
         head->adjacents = new;
-        return head;
+        return aux;
     }
 
-    Adjacent* aux = head->adjacents;
+    Adjacent* aux2 = head->adjacents;
 
-    while (aux->next != NULL) aux = aux->next;
-    aux->next = new;
+    while (aux2->next != NULL) aux2 = aux2->next;
+    aux2->next = new;
 
-    return head;
+    return aux;
 }
 
 void listAdjacents(Vertice* head, char id[]) {
+    printf("%s;%s\n", head->id, id);
     if (existVertice(head, id)) {
-        while (strcmp(head->id, id) != 0) head = head->next;
+        printf("%d\n", strcmp(head->id, id));
+        while (strcmp(head->id, id) != 0) {
+            head = head->next;
+        }
         Adjacent* aux = head->adjacents;
         while (aux != NULL) {
             printf("Localizacao: %s | Distancia: %.3f km\n", aux->id, aux->distance);
@@ -74,25 +80,34 @@ void listAdjacents(Vertice* head, char id[]) {
 
 Vertice* createGraph() {
     Vertice* v = NULL;
+    FILE* fp;
 
-    v = createVertice(v, "tatica.ideia.morno", "Volt");
-    v = createVertice(v, "chia.tigela.palmitos", "Escola Secundaria de Barcelos");
-    v = createVertice(v, "conta.mumias.bolota", "Central Camionagem Barcelos");
-    v = createVertice(v, "entrelinha.resolvidas.fixo", "Instituto Politecnico do Cavado e do Ave (IPCA)");
-    v = createVertice(v, "evolucao.adido.vitorioso", "Estadio Cidade de Barcelos");
-    v = createVertice(v, "regua.vinco.velho", "Piscinas Municipais de Barcelos");
-    v = createVertice(v, "tirei.manhas.lagoa", "Pavilhao Municipal de Barcelos");
-    v = createVertice(v, "tropa.ocio.garota", "Parque Municipal de Barcelos");
-    v = createVertice(v, "uteis.margem.forem", "Estacao CP - Barcelos");
+    fp = fopen(DATA_DIR"vertices.txt", "r");
+    if (fp == NULL) return v;
 
-    v = createEdge(v, "tatica.ideia.morno", "chia.tigela.palmitos", 1.9F);
-    v = createEdge(v, "tatica.ideia.morno", "conta.mumias.bolota", 1.7F);
-    v = createEdge(v, "tatica.ideia.morno", "entrelinha.resolvidas.fixo", 1.2F);
-    v = createEdge(v, "tatica.ideia.morno", "evolucao.adido.vitorioso", 2.9F);
-    v = createEdge(v, "tatica.ideia.morno", "regua.vinco.velho", 1.6F);
-    v = createEdge(v, "tatica.ideia.morno", "tirei.manhas.lagoa", 1.1F);
-    v = createEdge(v, "tatica.ideia.morno", "tropa.ocio.garota", 1.0F);
-    v = createEdge(v, "tatica.ideia.morno", "uteis.margem.forem", 1.7F);
+    char id[SIZE_LOCATION], name[SIZE_LOCATION];
+
+    while (!feof(fp)) {
+        fscanf(fp, "%[^;];%[^\n]\n", &id, &name);
+        printf("%s;%s\n", id, name);
+        v = createVertice(v, id, name);
+    }
+
+    fclose(fp);
+
+    fp = fopen(DATA_DIR"edges.txt", "r");
+    if (fp == NULL) return v;
+
+    float distance;
+    char origin[SIZE_LOCATION], destination[SIZE_LOCATION];
+
+    while (!feof(fp)) {
+        fscanf(fp, "%[^;];%[^;];%f\n", &origin, &destination, &distance);
+        printf("%s;%s;%f\n", origin, destination, distance);
+        v = createEdge(v, origin, destination, distance);
+    }
+
+    fclose(fp);
 
     return v;
 }

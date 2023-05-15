@@ -366,7 +366,7 @@ int main() {
                 headVertices = createGraph();
 
                 puts("----------------------------------------");
-                puts("Localizacoes adjacentes a tatica.ideia.mornos:\n");
+                puts("Localizacoes adjacentes a tatica.ideia.morno:\n");
                 listAdjacents(headVertices, "tatica.ideia.morno");
                 puts("----------------------------------------");
 
