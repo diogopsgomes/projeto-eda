@@ -14,6 +14,8 @@
 #define SIZE_NIF 15
 #define SIZE_DATETIME 20
 
+#define HQ "tatica.ideia.morno"
+
 #define RED     "\x1B[31m"
 #define GREEN   "\x1B[32m"
 #define YELLOW  "\x1B[33m"
@@ -113,9 +115,10 @@ void vehiclesMain();
 Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, int available, char location[]);
 Vehicle* removeVehicle(Vehicle* head, int id);
 void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery, float range, char location[]);
-int listVehicles(Vehicle* head, Type* headTypes);
-int listVehiclesByRange(Vehicle* head, Type* headTypes);
-int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]);
+int listVehicles(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
+int listVehiclesByRange(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
+int listVehiclesByLocation(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
+int listVehiclesByDistance(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
 int existVehicle(Vehicle* head, int id);
 int assignVehicleId(Vehicle* head);
 int isVehicleAvailable(Vehicle* head, int id);
@@ -135,9 +138,12 @@ Type* readTypes();
 /*Locations*/
 Vertice* createVertice(Vertice* head, char id[], char name[]);
 int existVertice(Vertice* head, char id[]);
+char* getVerticeName(Vertice* head, char id[]);
+float getDistance(Vertice* head, char origin[], char destination[]);
 Vertice* createEdge(Vertice* head, char origin[], char destination[], float distance);
 void listAdjacents(Vertice* head, char id[]);
 Vertice* createGraph();
+void listGraph(Vertice* head);
 
 /*Clients*/
 void clientsMain();
@@ -148,6 +154,7 @@ int listClients(Client* head);
 int listClient(Client* head, int id);
 char* getClientName(Client* head, int id);
 char* getClientUsername(Client* head, int id);
+char* getClientLocation(Client* head, int id);
 int existClientUsername(Client* head, char username[]);
 int existClient(Client* head, int id);
 int assignClientId(Client* head);

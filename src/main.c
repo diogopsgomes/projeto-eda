@@ -56,6 +56,7 @@ int main() {
                                 headRides = readRides();
                                 headVehicles = readVehicles();
                                 headTypes = readTypes();
+                                headVertices = createGraph();
                                 headClients = readClients();
 
                                 available = isClientAvailable(headClients, user);
@@ -73,7 +74,7 @@ int main() {
 
                                 menuHeaderVehicles();
                                 headVehiclesSorted = copyLinkedList(headVehicles);
-                                if ((count = listVehiclesByRange(headVehiclesSorted, headTypes)) == 0) {
+                                if ((count = listVehiclesByRange(headVehiclesSorted, headTypes, headVertices, getClientLocation(headClients, user))) == 0) {
                                     puts("\n                                                        Nao existem veiculos registados!                                                         \n");
                                 } else {
                                     puts("");
@@ -156,7 +157,7 @@ int main() {
                                         menuApp();
                                         menuHeaderVehicles();
 
-                                        if ((count = listVehiclesByLocation(headVehicles, headTypes, location)) == 0) {
+                                        if ((count = listVehiclesByLocation(headVehicles, headTypes, headVertices, location)) == 0) {
                                             puts("\n                                                     Nao existem veiculos nessa localizacao!                                                     \n");
                                         } else {
                                             puts("");
@@ -364,11 +365,23 @@ int main() {
                 break;
             case 3:
                 headVertices = createGraph();
+                headVehicles = readVehicles();
+                headTypes = readTypes();
 
-                puts("----------------------------------------");
-                puts("Localizacoes adjacentes a tatica.ideia.morno:\n");
-                listAdjacents(headVertices, "tatica.ideia.morno");
-                puts("----------------------------------------");
+                listGraph(headVertices);
+
+                printf("%f", getDistance(headVertices, "tatica.ideia.morno", "chia.tigela.palmitos"));
+
+                enterToContinue();
+
+                menuHeaderVehicles();
+                headVehiclesSorted = copyLinkedList(headVehicles);
+                if ((count = listVehiclesByDistance(headVehiclesSorted, headTypes, headVertices, "tatica.ideia.morno")) == 0) {
+                    puts("\n                                                        Nao existem veiculos registados!                                                         \n");
+                } else {
+                    puts("");
+                    showCount(count);
+                }
 
                 enterToContinue();
             default:

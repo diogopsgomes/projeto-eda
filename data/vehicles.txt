@@ -1,5 +1,5 @@
-1;1;50.000000;100.000000;1;faixa.posou.rolos
-2;2;0.000000;0.000000;1;varzea.afago.entrou
-3;2;40.000000;80.000000;1;aluno.escorre.deva
-4;2;20.000000;40.000000;1;tira.recuar.recibo
-5;2;30.000000;60.000000;1;ninhos.gamas.cofres
+1;1;50.000000;100.000000;1;tatica.ideia.morno
+2;2;0.000000;0.000000;1;chia.tigela.palmitos
+3;2;40.000000;80.000000;1;conta.mumias.bolota
+4;2;20.000000;40.000000;1;entrelinha.resolvidas.fixo
+5;2;30.000000;60.000000;1;evolucao.adido.vitorioso

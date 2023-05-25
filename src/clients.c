@@ -328,6 +328,16 @@ char* getClientUsername(Client* head, int id) {
     return "*********";
 }
 
+char* getClientLocation(Client* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->address;
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
 // Check if Username is already in use
 /**
  * It returns 1 if the username exists in the linked list, otherwise it returns 0

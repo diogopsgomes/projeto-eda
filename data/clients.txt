@@ -1,2 +1,2 @@
-1;diogopsgomes;eLgKfM;Diogo Gomes;252525252;Vila Nova de Famalicao;118.000000;1
-2;lxstmind;eLgKfM;Joao Marcelo;200300000;Guimaraes;40.000000;1
+1;diogopsgomes;eLgKfM;Diogo Gomes;252525252;entrelinha.resolvidas.fixo;118.000000;1
+2;lxstmind;eLgKfM;Joao Marcelo;200300000;evolucao.adido.vitorioso;40.000000;1

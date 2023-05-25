@@ -35,6 +35,29 @@ int existVertice(Vertice* head, char id[]) {
     return 0;
 }
 
+char* getVerticeName(Vertice* head, char id[]) {
+    while (head != NULL) {
+        if (strcmp(head->id, id) == 0) return head->name;
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
+float getDistance(Vertice* head, char origin[], char destination[]) {
+    if (!existVertice(head, origin) || !existVertice(head, destination)) return -1;
+    if (strcmp(origin, destination) == 0) return 0;
+
+    Vertice* v = head;
+    while (strcmp(v->id, origin) != 0) v = v->next;
+
+    Adjacent* a = v->adjacents;
+    while (strcmp(a->id, destination) != 0) a = a->next;
+
+    return a->distance;
+}
+
 Vertice* createEdge(Vertice* head, char origin[], char destination[], float distance) {
     if (!existVertice(head, origin) || !existVertice(head, destination)) return head;
 
@@ -64,13 +87,11 @@ Vertice* createEdge(Vertice* head, char origin[], char destination[], float dist
 }
 
 void listAdjacents(Vertice* head, char id[]) {
-    printf("%s;%s\n", head->id, id);
     if (existVertice(head, id)) {
-        printf("%d\n", strcmp(head->id, id));
-        while (strcmp(head->id, id) != 0) {
-            head = head->next;
-        }
+        while (strcmp(head->id, id) != 0) head = head->next;
+
         Adjacent* aux = head->adjacents;
+
         while (aux != NULL) {
             printf("Localizacao: %s | Distancia: %.3f km\n", aux->id, aux->distance);
             aux = aux->next;
@@ -89,7 +110,6 @@ Vertice* createGraph() {
 
     while (!feof(fp)) {
         fscanf(fp, "%[^;];%[^\n]\n", &id, &name);
-        printf("%s;%s\n", id, name);
         v = createVertice(v, id, name);
     }
 
@@ -103,11 +123,30 @@ Vertice* createGraph() {
 
     while (!feof(fp)) {
         fscanf(fp, "%[^;];%[^;];%f\n", &origin, &destination, &distance);
-        printf("%s;%s;%f\n", origin, destination, distance);
         v = createEdge(v, origin, destination, distance);
     }
 
     fclose(fp);
 
     return v;
+}
+
+void listGraph(Vertice* head) {
+    Vertice* v = head;
+
+    while (v != NULL) {
+        printf("%s (%s)\n", v->name, v->id);
+
+        Adjacent* a = v->adjacents;
+
+        while (a != NULL) {
+            char location[SIZE_LOCATION];
+            strcpy(location, a->id);
+            printf("|--> %-50s (%-30s -->    %.3f km\n", getVerticeName(head, a->id), strcat(location, ")"), a->distance);
+            a = a->next;
+        }
+
+        printf("\n");
+        v = v->next;
+    }
 }

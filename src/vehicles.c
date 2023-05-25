@@ -11,11 +11,12 @@ void vehiclesMain() {
     do {
         Vehicle* head = readVehicles();
         Type* headTypes = readTypes();
+        Vertice* headVertices = createGraph();
 
         clrscr();
         menuHeaderVehicles();
 
-        if ((count = listVehicles(head, headTypes)) == 0) {
+        if ((count = listVehicles(head, headTypes, headVertices, HQ)) == 0) {
             puts("\n                                                    Nao existem veiculos registados!                                                     \n");
         } else {
             puts("");
@@ -94,7 +95,7 @@ void vehiclesMain() {
             case 4:
                 clrscr();
                 menuHeaderVehicles();
-                count = listVehiclesByRange(head, headTypes);
+                count = listVehiclesByRange(head, headTypes, headVertices, HQ);
                 puts("");
                 showCount(count);
                 puts("");
@@ -110,7 +111,7 @@ void vehiclesMain() {
                 clrscr();
                 menuHeaderVehicles();
 
-                if ((count = listVehiclesByLocation(head, headTypes, location)) == 0) {
+                if ((count = listVehiclesByLocation(head, headTypes, headVertices, location)) == 0) {
                     puts("\n                                                 Nao existem veiculos nessa localizacao!                                                 \n");
                 } else {
                     puts("");
@@ -236,14 +237,14 @@ void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery
  *
  * @return The number of vehicles in the list.
  */
-int listVehicles(Vehicle* head, Type* headTypes) {
+int listVehicles(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
     int count = 0;
     char available[5];
 
     while (head != NULL) {
         (head->available == 1) ? (strcpy(available, "Sim")) : (strcpy(available, "Nao"));
 
-        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%-5s\t\t%s\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, available, head->location);
+        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%-5s\t\t%s (%.3f km)\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, available, head->location, getDistance(headVertices, location, head->location));
 
         count++;
 
@@ -262,7 +263,7 @@ int listVehicles(Vehicle* head, Type* headTypes) {
  *
  * @return The return value is the result of the function listVehicles.
  */
-int listVehiclesByRange(Vehicle* head, Type* headTypes) {
+int listVehiclesByRange(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
     int swapped;
 
     if (head != NULL) {
@@ -293,7 +294,7 @@ int listVehiclesByRange(Vehicle* head, Type* headTypes) {
         } while (swapped);
     }
 
-    return listVehicles(head, headTypes);
+    return listVehicles(head, headTypes, headVertices, location);
 }
 
 /**
@@ -305,7 +306,7 @@ int listVehiclesByRange(Vehicle* head, Type* headTypes) {
  *
  * @return The return value is the number of vehicles that were listed.
  */
-int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]) {
+int listVehiclesByLocation(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
     Vehicle* filtered = NULL;
 
     while (head != NULL) {
@@ -316,7 +317,41 @@ int listVehiclesByLocation(Vehicle* head, Type* headTypes, char location[]) {
         head = head->next;
     }
 
-    return listVehiclesByRange(filtered, headTypes);
+    return listVehiclesByRange(filtered, headTypes, headVertices, location);
+}
+
+int listVehiclesByDistance(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
+    int swapped;
+
+    if (head != NULL) {
+        do {
+            Vehicle* prev = NULL;
+            Vehicle* current = head;
+            swapped = 0;
+
+            while (current->next != NULL) {
+                if (getDistance(headVertices, location, current->location) > getDistance(headVertices, location, current->next->location)) {
+                    Vehicle* next = current->next;
+                    current->next = next->next;
+                    next->next = current;
+
+                    if (prev != NULL) {
+                        prev->next = next;
+                    } else {
+                        head = next;
+                    }
+
+                    prev = next;
+                    swapped = 1;
+                } else {
+                    prev = current;
+                    current = current->next;
+                }
+            }
+        } while (swapped);
+    }
+
+    return listVehicles(head, headTypes, headVertices, location);
 }
 
 // Check if Vehicle ID exists
