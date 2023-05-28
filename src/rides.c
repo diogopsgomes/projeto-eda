@@ -115,7 +115,7 @@ Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* head
  * @param id The id of the ride
  * @param endLocation The end location of the ride
  */
-void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, char endLocation[]) {
+void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, Location* headLocations, int id, char endLocation[]) {
     if (headVehicles == NULL || headTypes == NULL || headClients == NULL) return;
 
     while (head != NULL) {
@@ -128,7 +128,10 @@ void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headCli
             float cost = getVehicleCost(headVehicles, headTypes, head->vehicle) * minutesElapsed;
             head->cost = cost;
 
-            float distance = minutesElapsed * 0.4;
+            /* float distance = minutesElapsed * 0.4;
+            head->distance = distance; */
+
+            float distance = getDistance(headLocations, head->startLocation, endLocation);
             head->distance = distance;
 
             while (headVehicles != NULL) {

@@ -21,6 +21,8 @@ void menuMain() {
     puts("| 2 - Veiculos                         |");
     puts("| 3 - Clientes                         |");
     puts("| 4 - Gestores                         |");
+    puts("| 5 - Localizacoes                     |");
+    puts("| 6 - Recolhas                         |");
     puts("| 0 - Sair                             |");
     puts("----------------------------------------");
     printf("Escolha uma opcao: ");
@@ -35,7 +37,7 @@ void menuMainClients(int available) {
     }
 }
 
-void menuMainClientsLine() {
+void menuLine() {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
 }
 
@@ -141,6 +143,11 @@ void menuFooterVehicles() {
     printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Listar por Autonomia | 5 - Listar por Localizacao | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
 }
 
+void menuFooterCollections() {
+    puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
+    printf("| 1 - Iniciar Recolha | 2 - Carregar Veiculos | 0 - Voltar | Escolha uma opcao: ");
+}
+
 void menuFooterClients() {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
     printf("| 1 - Inserir | 2 - Editar | 3 - Remover | 4 - Adicionar Saldo | 5 - Remover Saldo | 6 - Atualizar | 0 - Voltar | Escolha uma opcao: ");
@@ -165,11 +172,6 @@ void menuTitleRemoveVehicle() {
 void menuTitleEditVehicle() {
     puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
     printf("Codigo do veiculo a editar: ");
-}
-
-void menuTitleListVehiclesByLocation() {
-    puts("-------------------------------------------------------------------------------------------------------------------------------------------------");
-    printf("Localizacao: ");
 }
 
 void menuTitleInsertClient() {

@@ -11,12 +11,12 @@ void vehiclesMain() {
     do {
         Vehicle* head = readVehicles();
         Type* headTypes = readTypes();
-        Vertice* headVertices = createGraph();
+        Location* headLocations = readLocations();
 
         clrscr();
         menuHeaderVehicles();
 
-        if ((count = listVehicles(head, headTypes, headVertices, HQ)) == 0) {
+        if ((count = listVehicles(head, headTypes, headLocations, HQ)) == 0) {
             puts("\n                                                    Nao existem veiculos registados!                                                     \n");
         } else {
             puts("");
@@ -95,7 +95,7 @@ void vehiclesMain() {
             case 4:
                 clrscr();
                 menuHeaderVehicles();
-                count = listVehiclesByRange(head, headTypes, headVertices, HQ);
+                count = listVehiclesByRange(head, headTypes, headLocations, HQ);
                 puts("");
                 showCount(count);
                 puts("");
@@ -103,7 +103,8 @@ void vehiclesMain() {
 
                 break;
             case 5:
-                menuTitleListVehiclesByLocation();
+                menuLine();
+                printf("Localizacao: ");
                 clrbuffer();
                 fgets(location, sizeof(location), stdin);
                 location[strcspn(location, "\n")] = 0;
@@ -111,7 +112,7 @@ void vehiclesMain() {
                 clrscr();
                 menuHeaderVehicles();
 
-                if ((count = listVehiclesByLocation(head, headTypes, headVertices, location)) == 0) {
+                if ((count = listVehiclesInLocation(head, headTypes, headLocations, location)) == 0) {
                     puts("\n                                                 Nao existem veiculos nessa localizacao!                                                 \n");
                 } else {
                     puts("");
@@ -237,14 +238,14 @@ void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery
  *
  * @return The number of vehicles in the list.
  */
-int listVehicles(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
+int listVehicles(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
     int count = 0;
     char available[5];
 
     while (head != NULL) {
         (head->available == 1) ? (strcpy(available, "Sim")) : (strcpy(available, "Nao"));
 
-        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%-5s\t\t%s (%.3f km)\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, available, head->location, getDistance(headVertices, location, head->location));
+        printf("  %06d\t%-25s\t%-5.1f\t\t\t%-7.3f\t\t\t%-5s\t\t%s (%.3f km)\n", head->id, getTypeName(headTypes, head->type), head->battery, head->range, available, head->location, getDistance(headLocations, location, head->location));
 
         count++;
 
@@ -263,7 +264,7 @@ int listVehicles(Vehicle* head, Type* headTypes, Vertice* headVertices, char loc
  *
  * @return The return value is the result of the function listVehicles.
  */
-int listVehiclesByRange(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
+int listVehiclesByRange(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
     int swapped;
 
     if (head != NULL) {
@@ -294,33 +295,10 @@ int listVehiclesByRange(Vehicle* head, Type* headTypes, Vertice* headVertices, c
         } while (swapped);
     }
 
-    return listVehicles(head, headTypes, headVertices, location);
+    return listVehicles(head, headTypes, headLocations, location);
 }
 
-/**
- * It filters the linked list by location, then lists the vehicles sorted by range
- *
- * @param head pointer to the first element of the linked list
- * @param headTypes a linked list of types
- * @param location The location of the vehicle
- *
- * @return The return value is the number of vehicles that were listed.
- */
-int listVehiclesByLocation(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
-    Vehicle* filtered = NULL;
-
-    while (head != NULL) {
-        if (strcmp(head->location, location) == 0) {
-            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->available, head->location);
-        }
-
-        head = head->next;
-    }
-
-    return listVehiclesByRange(filtered, headTypes, headVertices, location);
-}
-
-int listVehiclesByDistance(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]) {
+int listVehiclesByBattery(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
     int swapped;
 
     if (head != NULL) {
@@ -330,7 +308,7 @@ int listVehiclesByDistance(Vehicle* head, Type* headTypes, Vertice* headVertices
             swapped = 0;
 
             while (current->next != NULL) {
-                if (getDistance(headVertices, location, current->location) > getDistance(headVertices, location, current->next->location)) {
+                if (current->battery > current->next->battery) {
                     Vehicle* next = current->next;
                     current->next = next->next;
                     next->next = current;
@@ -351,7 +329,121 @@ int listVehiclesByDistance(Vehicle* head, Type* headTypes, Vertice* headVertices
         } while (swapped);
     }
 
-    return listVehicles(head, headTypes, headVertices, location);
+    return listVehicles(head, headTypes, headLocations, location);
+}
+
+int listVehiclesByDistance(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
+    int swapped;
+
+    if (head != NULL) {
+        do {
+            Vehicle* prev = NULL;
+            Vehicle* current = head;
+            swapped = 0;
+
+            while (current->next != NULL) {
+                if (getDistance(headLocations, location, current->location) > getDistance(headLocations, location, current->next->location)) {
+                    Vehicle* next = current->next;
+                    current->next = next->next;
+                    next->next = current;
+
+                    if (prev != NULL) {
+                        prev->next = next;
+                    } else {
+                        head = next;
+                    }
+
+                    prev = next;
+                    swapped = 1;
+                } else if (getDistance(headLocations, location, current->location) == getDistance(headLocations, location, current->next->location)) {
+                    if (current->range < current->next->range) {
+                        Vehicle* next = current->next;
+                        current->next = next->next;
+                        next->next = current;
+
+                        if (prev != NULL) {
+                            prev->next = next;
+                        } else {
+                            head = next;
+                        }
+
+                        prev = next;
+                        swapped = 1;
+                    }
+                } else {
+                    prev = current;
+                    current = current->next;
+                }
+            }
+        } while (swapped);
+    }
+
+    return listVehicles(head, headTypes, headLocations, location);
+}
+
+/**
+ * It filters the linked list by location, then lists the vehicles sorted by range
+ *
+ * @param head pointer to the first element of the linked list
+ * @param headTypes a linked list of types
+ * @param location The location of the vehicle
+ *
+ * @return The return value is the number of vehicles that were listed.
+ */
+int listVehiclesInLocation(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
+    Vehicle* filtered = NULL;
+
+    while (head != NULL) {
+        if (strcmp(head->location, location) == 0) {
+            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->available, head->location);
+        }
+
+        head = head->next;
+    }
+
+    return listVehiclesByRange(filtered, headTypes, headLocations, location);
+}
+
+int listVehiclesInRadius(Vehicle* head, Type* headTypes, Location* headLocations, char location[], float radius) {
+    Vehicle* filtered = NULL;
+
+    while (head != NULL) {
+        if (getDistance(headLocations, location, head->location) <= radius) {
+            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->available, head->location);
+        }
+
+        head = head->next;
+    }
+
+    return listVehiclesByDistance(filtered, headTypes, headLocations, location);
+}
+
+int listVehiclesByTypeInRadius(Vehicle* head, Type* headTypes, Location* headLocations, int type, char location[], float radius) {
+    Vehicle* filtered = NULL;
+
+    while (head != NULL) {
+        if ((getDistance(headLocations, location, head->location) <= radius) && (head->type == type || type == 0)) {
+            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->available, head->location);
+        }
+
+        head = head->next;
+    }
+
+    return listVehiclesByDistance(filtered, headTypes, headLocations, location);
+}
+
+int listVehiclesByBatteryHalfCharged(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
+    Vehicle* filtered = NULL;
+
+    while (head != NULL) {
+        if (head->battery < 50) {
+            filtered = insertVehicle(filtered, head->id, head->type, head->battery, head->range, head->available, head->location);
+        }
+
+        head = head->next;
+    }
+
+    return listVehiclesByBattery(filtered, headTypes, headLocations, location);
 }
 
 // Check if Vehicle ID exists
@@ -437,6 +529,33 @@ int isVehicleCharged(Vehicle* head, int id) {
     return 0;
 }
 
+void updateVehicleLocation(Vehicle* head, int id, char location[]) {
+    while (head != NULL) {
+        if (head->id == id) {
+            strcpy(head->location, location);
+
+            break;
+        }
+
+        head = head->next;
+    }
+}
+
+Vehicle* chargeVehicles(Vehicle* head, char location[]) {
+    Vehicle* aux = head;
+
+    while (aux != NULL) {
+        if (strcmp(aux->location, location) == 0) {
+            aux->battery = 100.0F;
+            aux->range = aux->battery * 2.0F;
+        }
+
+        aux = aux->next;
+    }
+
+    return head;
+}
+
 // Copy linked list
 /**
  * It creates a new linked list, and copies the contents of the original linked list into the new
@@ -511,6 +630,36 @@ Vehicle* readVehicles() {
     fclose(fp);
 
     return aux;
+}
+
+char* getVehicleTypeName(Vehicle* head, Type* headTypes, int id) {
+    while (head != NULL) {
+        if (head->id == id) return getTypeName(headTypes, head->type);
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
+float getVehicleBattery(Vehicle* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->battery;
+
+        head = head->next;
+    }
+
+    return -1;
+}
+
+char* getVehicleLocation(Vehicle* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->location;
+
+        head = head->next;
+    }
+
+    return "*********";
 }
 
 // Get Type Cost from Type ID

@@ -6,7 +6,6 @@
 #define SIZE_USERNAME 40
 #define SIZE_PASSWORD 40
 #define SIZE_NAME 60
-#define SIZE_ADDRESS 150
 #define SIZE_LOCATION 60
 #define SIZE_TYPE 5
 #define SIZE_BATTERY 15
@@ -26,6 +25,12 @@
 #define RESET   "\x1B[0m"
 
 #include <time.h>
+
+typedef struct integer {
+    int id;
+    struct integer* next;
+
+} Integer;
 
 typedef struct type {
     int id; // 1 - Trotinete; 2 - Bicicleta
@@ -52,7 +57,7 @@ typedef struct client {
     char password[SIZE_PASSWORD];
     char name[SIZE_NAME];
     int nif;
-    char address[SIZE_ADDRESS];
+    char location[SIZE_LOCATION];
     float balance;
     int available;
     struct client* next;
@@ -82,6 +87,23 @@ typedef struct ride {
 
 } Ride;
 
+typedef struct point {
+    char id[SIZE_LOCATION];
+    struct integer* collected;
+    struct point* next;
+
+} Point;
+
+typedef struct collection {
+    int id;
+    char startLocation[SIZE_LOCATION];
+    time_t datetime;
+    int manager;
+    struct point* points;
+    struct collection* next;
+
+} Collection;
+
 typedef struct adjacent {
     char id[SIZE_LOCATION];
     float distance;
@@ -89,19 +111,25 @@ typedef struct adjacent {
 
 } Adjacent;
 
-typedef struct vertice {
+typedef struct location {
     char id[SIZE_LOCATION];
     char name[SIZE_LOCATION];
     struct adjacent* adjacents;
-    struct vertice* next;
+    struct location* next;
 
-} Vertice;
+} Location;
+
+typedef struct visited {
+    char id[SIZE_LOCATION];
+    struct visited* next;
+
+} Visited;
 
 /*Rides*/
 void ridesMain();
 Ride* insertRide(Ride* head, int id, int vehicle, int client, int startTime, int endTime, char startLocation[], char endLocation[], float cost, float distance);
 Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, int vehicle, int client);
-void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, int id, char endLocation[]);
+void endRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* headClients, Location* headLocations, int id, char endLocation[]);
 int listRides(Ride* head, Client* headClients);
 int listRidesClient(Ride* head, Client* headClients, int id);
 int assignRideId(Ride* head);
@@ -115,17 +143,26 @@ void vehiclesMain();
 Vehicle* insertVehicle(Vehicle* head, int id, int type, float battery, float range, int available, char location[]);
 Vehicle* removeVehicle(Vehicle* head, int id);
 void editVehicle(Vehicle* head, Type* headTypes, int id, int type, float battery, float range, char location[]);
-int listVehicles(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
-int listVehiclesByRange(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
-int listVehiclesByLocation(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
-int listVehiclesByDistance(Vehicle* head, Type* headTypes, Vertice* headVertices, char location[]);
+int listVehicles(Vehicle* head, Type* headTypes, Location* headLocations, char location[]);
+int listVehiclesByRange(Vehicle* head, Type* headTypes, Location* headLocations, char location[]);
+int listVehiclesByBattery(Vehicle* head, Type* headTypes, Location* headLocations, char location[]);
+int listVehiclesInLocation(Vehicle* head, Type* headTypes, Location* headLocations, char location[]);
+int listVehiclesByDistance(Vehicle* head, Type* headTypes, Location* headLocations, char location[]);
+int listVehiclesInRadius(Vehicle* head, Type* headTypes, Location* headLocations, char location[], float radius);
+int listVehiclesByTypeInRadius(Vehicle* head, Type* headTypes, Location* headLocations, int type, char location[], float radius);
+int listVehiclesByBatteryHalfCharged(Vehicle* head, Type* headTypes, Location* headLocations, char location[]);
 int existVehicle(Vehicle* head, int id);
 int assignVehicleId(Vehicle* head);
 int isVehicleAvailable(Vehicle* head, int id);
 int isVehicleCharged(Vehicle* head, int id);
+void updateVehicleLocation(Vehicle* head, int id, char location[]);
+Vehicle* chargeVehicles(Vehicle* head, char location[]);
 Vehicle* copyLinkedList(Vehicle* head);
 int saveVehicles(Vehicle* head);
 Vehicle* readVehicles();
+char* getVehicleTypeName(Vehicle* head, Type* headTypes, int id);
+float getVehicleBattery(Vehicle* head, int id);
+char* getVehicleLocation(Vehicle* head, int id);
 float getVehicleCost(Vehicle* head, Type* headTypes, int id);
 float getTypeCost(Type* head, int id);
 char* getTypeName(Type* head, int id);
@@ -136,20 +173,35 @@ int saveTypes(Type* head);
 Type* readTypes();
 
 /*Locations*/
-Vertice* createVertice(Vertice* head, char id[], char name[]);
-int existVertice(Vertice* head, char id[]);
-char* getVerticeName(Vertice* head, char id[]);
-float getDistance(Vertice* head, char origin[], char destination[]);
-Vertice* createEdge(Vertice* head, char origin[], char destination[], float distance);
-void listAdjacents(Vertice* head, char id[]);
-Vertice* createGraph();
-void listGraph(Vertice* head);
+void locationsMain();
+Location* createLocation(Location* head, char id[], char name[]);
+int existLocation(Location* head, char id[]);
+char* getLocationName(Location* head, char id[]);
+float getDistance(Location* head, char origin[], char destination[]);
+Location* createEdge(Location* head, char origin[], char destination[], float distance);
+void listAdjacents(Location* head, char id[]);
+void listGraph(Location* head);
+Location* readLocations();
+
+/*Collections*/
+void collectionsMain(int manager);
+Collection* collect(Collection* head, Vehicle* headVehicles, Location* headLocations, char startLocation[], int manager);
+Collection* insertCollection(Collection* head, int id, char startLocation[], time_t datetime, int manager);
+Collection* insertPoint(Collection* head, int id, char location[]);
+Collection* insertCollected(Collection* head, int id, char location[], int vehicle);
+Visited* insertVisited(Visited* head, char location[]);
+void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes);
+void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTypes);
+int assignCollectionId(Collection* head);
+int isVisited(Visited* head, char location[]);
+int saveCollections(Collection* head);
+Collection* loadCollections();
 
 /*Clients*/
 void clientsMain();
-Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance, int available);
+Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char location[], float balance, int available);
 Client* removeClient(Client* head, int id);
-void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]);
+void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char location[]);
 int listClients(Client* head);
 int listClient(Client* head, int id);
 char* getClientName(Client* head, int id);
@@ -181,7 +233,6 @@ Manager* readManagers();
 
 /*Auth*/
 void encrypt(char password[]);
-void decrypt(char password[]);
 int authClient(Client* head, char username[], char password[]);
 int authManager(Manager* head, char username[], char password[]);
 
@@ -189,7 +240,7 @@ int authManager(Manager* head, char username[], char password[]);
 void menuApp();
 void menuMain();
 void menuMainClients(int available);
-void menuMainClientsLine();
+void menuLine();
 void menuAuth();
 void menuAuthClients();
 void menuAuthManagers();
@@ -201,12 +252,12 @@ void menuHeaderClient();
 void menuHeaderManagers();
 void menuFooterRides();
 void menuFooterVehicles();
+void menuFooterCollections();
 void menuFooterClients();
 void menuFooterManagers();
 void menuTitleInsertVehicle();
 void menuTitleRemoveVehicle();
 void menuTitleEditVehicle();
-void menuTitleListVehiclesByLocation();
 void menuTitleInsertClient();
 void menuTitleRemoveClient();
 void menuTitleEditClient();

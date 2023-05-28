@@ -5,7 +5,7 @@
 
 void clientsMain() {
     int option, id, nif, count;
-    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
+    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], location[SIZE_LOCATION], nifStr[SIZE_NIF];
     float balance;
 
     do {
@@ -50,10 +50,10 @@ void clientsMain() {
 
                 printf("Morada: ");
                 clrbuffer();
-                fgets(address, sizeof(address), stdin);
-                address[strcspn(address, "\n")] = 0;
+                fgets(location, sizeof(location), stdin);
+                location[strcspn(location, "\n")] = 0;
 
-                head = insertClient(head, assignClientId(head), username, password, name, nif, address, 0, 1);
+                head = insertClient(head, assignClientId(head), username, password, name, nif, location, 0, 1);
                 saveClients(head);
 
                 break;
@@ -89,10 +89,10 @@ void clientsMain() {
 
                 printf("Morada: ");
                 clrbuffer();
-                fgets(address, sizeof(address), stdin);
-                address[strcspn(address, "\n")] = 0;
+                fgets(location, sizeof(location), stdin);
+                location[strcspn(location, "\n")] = 0;
 
-                editClient(head, id, username, password, name, nif, address);
+                editClient(head, id, username, password, name, nif, location);
                 saveClients(head);
 
                 break;
@@ -147,13 +147,13 @@ void clientsMain() {
  * @param password The password of the client
  * @param name The name of the client
  * @param nif The tax identification number of the client
- * @param address The address of the client
+ * @param location The location of the client
  * @param balance The balance of the client
  * @param available 0 = not available, 1 = available
  *
  * @return The head of the list.
  */
-Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[], float balance, int available) {
+Client* insertClient(Client* head, int id, char username[], char password[], char name[], int nif, char location[], float balance, int available) {
     Client* new = malloc(sizeof(struct client)), * aux = head;
 
     if (new != NULL) {
@@ -162,7 +162,7 @@ Client* insertClient(Client* head, int id, char username[], char password[], cha
         strcpy(new->password, password);
         strcpy(new->name, name);
         new->nif = nif;
-        strcpy(new->address, address);
+        strcpy(new->location, location);
         new->balance = balance;
         new->available = available;
         new->next = NULL;
@@ -223,16 +223,16 @@ Client* removeClient(Client* head, int id) {
  * @param password The password of the client
  * @param name The name of the client
  * @param nif The tax identification number of the client
- * @param address The address of the client
+ * @param location The location of the client
  */
-void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char address[]) {
+void editClient(Client* head, int id, char username[], char password[], char name[], int nif, char location[]) {
     while (head != NULL) {
         if (head->id == id) {
             if (strlen(username) > 0) strcpy(head->username, username);
             if (strlen(password) > 0) strcpy(head->password, password);
             if (strlen(name) > 0) strcpy(head->name, name);
             if (nif >= 0) head->nif = nif;
-            if (strlen(address) > 0) strcpy(head->address, address);
+            if (strlen(location) > 0) strcpy(head->location, location);
 
             break;
         }
@@ -253,7 +253,7 @@ int listClients(Client* head) {
     int count = 0;
 
     while (head != NULL) {
-        printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->address);
+        printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->location);
 
         count++;
 
@@ -277,7 +277,7 @@ int listClient(Client* head, int id) {
 
     while (head != NULL) {
         if (head->id == id) {
-            printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->address);
+            printf("  %06d\t%-25s\t%-25s\t%-10.2f\t%-15d\t%-25s\t\n", head->id, head->name, head->username, head->balance, head->nif, head->location);
 
             count++;
 
@@ -330,7 +330,7 @@ char* getClientUsername(Client* head, int id) {
 
 char* getClientLocation(Client* head, int id) {
     while (head != NULL) {
-        if (head->id == id) return head->address;
+        if (head->id == id) return head->location;
 
         head = head->next;
     }
@@ -504,7 +504,7 @@ int saveClients(Client* head) {
     if (fp == NULL) return 0;
 
     while (head != NULL) {
-        fprintf(fp, "%d;%s;%s;%s;%d;%s;%f;%d\n", head->id, head->username, head->password, head->name, head->nif, head->address, head->balance, head->available);
+        fprintf(fp, "%d;%s;%s;%s;%d;%s;%f;%d\n", head->id, head->username, head->password, head->name, head->nif, head->location, head->balance, head->available);
 
         head = head->next;
     }
@@ -547,12 +547,12 @@ Client* readClients() {
     ungetc(c, fp);
 
     int id, nif, available;
-    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS];
+    char username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], location[SIZE_LOCATION];
     float balance;
 
     while (!feof(fp)) {
-        fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f;%d\n", &id, &username, &password, &name, &nif, &address, &balance, &available);
-        aux = insertClient(aux, id, username, password, name, nif, address, balance, available);
+        fscanf(fp, "%d;%[^;];%[^;];%[^;];%d;%[^;];%f;%d\n", &id, &username, &password, &name, &nif, &location, &balance, &available);
+        aux = insertClient(aux, id, username, password, name, nif, location, balance, available);
     }
 
     fclose(fp);

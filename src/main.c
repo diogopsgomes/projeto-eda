@@ -10,10 +10,10 @@ int main() {
     Type* headTypes;
     Client* headClients;
     Manager* headManagers;
-    Vertice* headVertices;
-    int optionA, optionB, optionC, count, valid, nif, available, charged, ride, vehicle, user;
-    float balance;
-    char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], address[SIZE_ADDRESS], nifStr[SIZE_NIF];
+    Location* headLocations;
+    int optionA, optionB, optionC, count, valid, nif, available, charged, ride, vehicle, type, user;
+    float balance, radius;
+    char location[SIZE_LOCATION], username[SIZE_USERNAME], password[SIZE_PASSWORD], name[SIZE_NAME], nifStr[SIZE_NIF];
 
     do {
         clrscr();
@@ -56,7 +56,7 @@ int main() {
                                 headRides = readRides();
                                 headVehicles = readVehicles();
                                 headTypes = readTypes();
-                                headVertices = createGraph();
+                                headLocations = readLocations();
                                 headClients = readClients();
 
                                 available = isClientAvailable(headClients, user);
@@ -74,7 +74,7 @@ int main() {
 
                                 menuHeaderVehicles();
                                 headVehiclesSorted = copyLinkedList(headVehicles);
-                                if ((count = listVehiclesByRange(headVehiclesSorted, headTypes, headVertices, getClientLocation(headClients, user))) == 0) {
+                                if ((count = listVehiclesByDistance(headVehiclesSorted, headTypes, headLocations, getClientLocation(headClients, user))) == 0) {
                                     puts("\n                                                        Nao existem veiculos registados!                                                         \n");
                                 } else {
                                     puts("");
@@ -86,7 +86,7 @@ int main() {
 
                                 switch (optionC) {
                                     case 1:
-                                        menuMainClientsLine();
+                                        menuLine();
 
                                         if (available == 1) {
                                             if (hasBalance(headClients, user) == 0) {
@@ -104,21 +104,31 @@ int main() {
                                                 if ((charged = isVehicleCharged(headVehicles, vehicle)) == 0) {
                                                     puts(RED"\nVeiculo sem bateria!\n"RESET);
                                                 }
-                                            } while (available == 0 || charged == 0);
+                                                (strcmp(getVehicleLocation(headVehicles, vehicle), getClientLocation(headClients, user)) == 0) ? (valid = 1) : (valid = 0);
+                                                if (valid == 0) {
+                                                    puts(RED"\nVeiculo demasiado longe!\n"RESET);
+                                                }
+
+                                            } while (available == 0 || charged == 0 || valid == 0);
 
                                             headRides = startRide(headRides, headVehicles, headTypes, headClients, assignRideId(headRides), vehicle, user);
 
                                             puts(GREEN"\nBoa Viagem!\n"RESET);
                                             enterToContinue();
                                         } else {
-                                            printf("Localizacao: ");
-                                            clrbuffer();
-                                            fgets(location, sizeof(location), stdin);
-                                            location[strcspn(location, "\n")] = 0;
+                                            do {
+                                                printf("Localizacao: ");
+                                                clrbuffer();
+                                                fgets(location, sizeof(location), stdin);
+                                                location[strcspn(location, "\n")] = 0;
+                                                if ((valid = existLocation(headLocations, location)) == 0) {
+                                                    puts(RED"\nLocalizacao invalida!\n"RESET);
+                                                }
+                                            } while (valid == 0);
 
                                             ride = currentRide(headRides, user);
 
-                                            endRide(headRides, headVehicles, headTypes, headClients, ride, location);
+                                            endRide(headRides, headVehicles, headTypes, headClients, headLocations, ride, location);
 
                                             puts(GREEN"\nViagem Terminada!\n"RESET);
                                             showRide(headRides, ride);
@@ -148,17 +158,27 @@ int main() {
 
                                         break;
                                     case 3:
-                                        menuTitleListVehiclesByLocation();
-                                        clrbuffer();
-                                        fgets(location, sizeof(location), stdin);
-                                        location[strcspn(location, "\n")] = 0;
+                                        menuLine();
+                                        do {
+                                            printf("Localizacao: ");
+                                            clrbuffer();
+                                            fgets(location, sizeof(location), stdin);
+                                            location[strcspn(location, "\n")] = 0;
+                                            if ((valid = existLocation(headLocations, location)) == 0) {
+                                                puts(RED"\nLocalizacao invalida!\n"RESET);
+                                            }
+                                        } while (valid == 0);
+                                        printf("Raio: ");
+                                        scanf("%f", &radius);
+                                        printf("Tipo de veiculo (0 - Todos | 1 - Trotinete | 2 - Bicicleta): ");
+                                        scanf("%d", &type);
 
                                         clrscr();
                                         menuApp();
                                         menuHeaderVehicles();
 
-                                        if ((count = listVehiclesByLocation(headVehicles, headTypes, headVertices, location)) == 0) {
-                                            puts("\n                                                     Nao existem veiculos nessa localizacao!                                                     \n");
+                                        if ((count = listVehiclesByTypeInRadius(headVehicles, headTypes, headLocations, type, location, radius)) == 0) {
+                                            puts("\n                                                         Nao existem veiculos por perto!                                                         \n");
                                         } else {
                                             puts("");
                                             showCount(count);
@@ -169,7 +189,7 @@ int main() {
 
                                         break;
                                     case 4:
-                                        menuMainClientsLine();
+                                        menuLine();
                                         printf("Montante: ");
                                         scanf("%f", &balance);
 
@@ -178,7 +198,7 @@ int main() {
 
                                         break;
                                     case 5:
-                                        menuMainClientsLine();
+                                        menuLine();
 
                                         nif = -1;
 
@@ -222,12 +242,17 @@ int main() {
                                         } while (valid == 0);
                                         if (strlen(nifStr) > 0) nif = atoi(nifStr);
 
-                                        printf("Morada: ");
-                                        clrbuffer();
-                                        fgets(address, sizeof(address), stdin);
-                                        address[strcspn(address, "\n")] = 0;
+                                        do {
+                                            printf("Localizacao: ");
+                                            clrbuffer();
+                                            fgets(location, sizeof(location), stdin);
+                                            location[strcspn(location, "\n")] = 0;
+                                            if ((valid = existLocation(headLocations, location)) == 0) {
+                                                puts(RED"\nLocalizacao invalida!\n"RESET);
+                                            }
+                                        } while (valid == 0);
 
-                                        editClient(headClients, user, username, password, name, nif, address);
+                                        editClient(headClients, user, username, password, name, nif, location);
                                         saveClients(headClients);
 
                                         break;
@@ -279,13 +304,16 @@ int main() {
                             } while (valid == 0);
 
                             do {
-                                printf("Morada: ");
+                                printf("Localizacao: ");
                                 clrbuffer();
-                                fgets(address, sizeof(address), stdin);
-                                address[strcspn(address, "\n")] = 0;
-                            } while (strlen(address) == 0);
+                                fgets(location, sizeof(location), stdin);
+                                location[strcspn(location, "\n")] = 0;
+                                if ((valid = existLocation(headLocations, location)) == 0) {
+                                    puts(RED"\nLocalizacao invalida!\n"RESET);
+                                }
+                            } while (valid == 0);
 
-                            headClients = insertClient(headClients, assignClientId(headClients), username, password, name, nif, address, 0, 1);
+                            headClients = insertClient(headClients, assignClientId(headClients), username, password, name, nif, location, 0, 1);
                             saveClients(headClients);
 
                             puts("\nConta criada com sucesso!\n");
@@ -349,6 +377,10 @@ int main() {
                                     case 4:
                                         managersMain();
                                         break;
+                                    case 5:
+                                        locationsMain();
+                                    case 6:
+                                        collectionsMain(user);
                                     default:
                                         break;
                                 }
@@ -363,27 +395,6 @@ int main() {
                 } while (optionB != 0);
 
                 break;
-            case 3:
-                headVertices = createGraph();
-                headVehicles = readVehicles();
-                headTypes = readTypes();
-
-                listGraph(headVertices);
-
-                printf("%f", getDistance(headVertices, "tatica.ideia.morno", "chia.tigela.palmitos"));
-
-                enterToContinue();
-
-                menuHeaderVehicles();
-                headVehiclesSorted = copyLinkedList(headVehicles);
-                if ((count = listVehiclesByDistance(headVehiclesSorted, headTypes, headVertices, "tatica.ideia.morno")) == 0) {
-                    puts("\n                                                        Nao existem veiculos registados!                                                         \n");
-                } else {
-                    puts("");
-                    showCount(count);
-                }
-
-                enterToContinue();
             default:
                 break;
         }

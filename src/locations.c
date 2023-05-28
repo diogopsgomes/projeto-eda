@@ -3,10 +3,20 @@
 #include <string.h>
 #include "../inc/header.h"
 
-Vertice* createVertice(Vertice* head, char id[], char name[]) {
-    if (existVertice(head, id)) return head;
+void locationsMain() {
+    Location* headLocations = readLocations();
 
-    Vertice* new = malloc(sizeof(struct vertice));
+    clrscr();
+
+    listGraph(headLocations);
+
+    enterToContinue();
+}
+
+Location* createLocation(Location* head, char id[], char name[]) {
+    if (existLocation(head, id)) return head;
+
+    Location* new = malloc(sizeof(struct location));
 
     if (new == NULL) return 0;
 
@@ -17,7 +27,7 @@ Vertice* createVertice(Vertice* head, char id[], char name[]) {
 
     if (head == NULL) return new;
 
-    Vertice* aux = head;
+    Location* aux = head;
 
     while (aux->next != NULL) aux = aux->next;
     aux->next = new;
@@ -25,43 +35,10 @@ Vertice* createVertice(Vertice* head, char id[], char name[]) {
     return head;
 }
 
-int existVertice(Vertice* head, char id[]) {
-    while (head != NULL) {
-        if (strcmp(head->id, id) == 0) return 1;
+Location* createEdge(Location* head, char origin[], char destination[], float distance) {
+    if (!existLocation(head, origin) || !existLocation(head, destination)) return head;
 
-        head = head->next;
-    }
-
-    return 0;
-}
-
-char* getVerticeName(Vertice* head, char id[]) {
-    while (head != NULL) {
-        if (strcmp(head->id, id) == 0) return head->name;
-
-        head = head->next;
-    }
-
-    return "*********";
-}
-
-float getDistance(Vertice* head, char origin[], char destination[]) {
-    if (!existVertice(head, origin) || !existVertice(head, destination)) return -1;
-    if (strcmp(origin, destination) == 0) return 0;
-
-    Vertice* v = head;
-    while (strcmp(v->id, origin) != 0) v = v->next;
-
-    Adjacent* a = v->adjacents;
-    while (strcmp(a->id, destination) != 0) a = a->next;
-
-    return a->distance;
-}
-
-Vertice* createEdge(Vertice* head, char origin[], char destination[], float distance) {
-    if (!existVertice(head, origin) || !existVertice(head, destination)) return head;
-
-    Vertice* aux = head;
+    Location* aux = head;
 
     while (strcmp(head->id, origin) != 0) head = head->next;
 
@@ -86,8 +63,41 @@ Vertice* createEdge(Vertice* head, char origin[], char destination[], float dist
     return aux;
 }
 
-void listAdjacents(Vertice* head, char id[]) {
-    if (existVertice(head, id)) {
+int existLocation(Location* head, char id[]) {
+    while (head != NULL) {
+        if (strcmp(head->id, id) == 0) return 1;
+
+        head = head->next;
+    }
+
+    return 0;
+}
+
+char* getLocationName(Location* head, char id[]) {
+    while (head != NULL) {
+        if (strcmp(head->id, id) == 0) return head->name;
+
+        head = head->next;
+    }
+
+    return "*********";
+}
+
+float getDistance(Location* head, char origin[], char destination[]) {
+    if (!existLocation(head, origin) || !existLocation(head, destination)) return -1;
+    if (strcmp(origin, destination) == 0) return 0;
+
+    Location* l = head;
+    while (strcmp(l->id, origin) != 0) l = l->next;
+
+    Adjacent* a = l->adjacents;
+    while (strcmp(a->id, destination) != 0) a = a->next;
+
+    return a->distance;
+}
+
+void listAdjacents(Location* head, char id[]) {
+    if (existLocation(head, id)) {
         while (strcmp(head->id, id) != 0) head = head->next;
 
         Adjacent* aux = head->adjacents;
@@ -99,54 +109,54 @@ void listAdjacents(Vertice* head, char id[]) {
     }
 }
 
-Vertice* createGraph() {
-    Vertice* v = NULL;
+void listGraph(Location* head) {
+    Location* l = head;
+
+    while (l != NULL) {
+        printf("%s (%s)\n", l->name, l->id);
+
+        Adjacent* a = l->adjacents;
+
+        while (a != NULL) {
+            char location[SIZE_LOCATION];
+            strcpy(location, a->id);
+            printf("|--> %-50s (%-30s -->    %.3f km\n", getLocationName(head, a->id), strcat(location, ")"), a->distance);
+            a = a->next;
+        }
+
+        printf("\n");
+        l = l->next;
+    }
+}
+
+Location* readLocations() {
+    Location* l = NULL;
     FILE* fp;
 
-    fp = fopen(DATA_DIR"vertices.txt", "r");
-    if (fp == NULL) return v;
+    fp = fopen(DATA_DIR"locations.txt", "r");
+    if (fp == NULL) return l;
 
     char id[SIZE_LOCATION], name[SIZE_LOCATION];
 
     while (!feof(fp)) {
         fscanf(fp, "%[^;];%[^\n]\n", &id, &name);
-        v = createVertice(v, id, name);
+        l = createLocation(l, id, name);
     }
 
     fclose(fp);
 
     fp = fopen(DATA_DIR"edges.txt", "r");
-    if (fp == NULL) return v;
+    if (fp == NULL) return l;
 
     float distance;
     char origin[SIZE_LOCATION], destination[SIZE_LOCATION];
 
     while (!feof(fp)) {
         fscanf(fp, "%[^;];%[^;];%f\n", &origin, &destination, &distance);
-        v = createEdge(v, origin, destination, distance);
+        l = createEdge(l, origin, destination, distance);
     }
 
     fclose(fp);
 
-    return v;
-}
-
-void listGraph(Vertice* head) {
-    Vertice* v = head;
-
-    while (v != NULL) {
-        printf("%s (%s)\n", v->name, v->id);
-
-        Adjacent* a = v->adjacents;
-
-        while (a != NULL) {
-            char location[SIZE_LOCATION];
-            strcpy(location, a->id);
-            printf("|--> %-50s (%-30s -->    %.3f km\n", getVerticeName(head, a->id), strcat(location, ")"), a->distance);
-            a = a->next;
-        }
-
-        printf("\n");
-        v = v->next;
-    }
+    return l;
 }

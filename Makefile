@@ -7,8 +7,8 @@ EXE_FILE = app
 
 all: $(BIN_DIR)/$(EXE_FILE)
 
-$(BIN_DIR)/$(EXE_FILE): $(OBJ_DIR)/main.o $(OBJ_DIR)/rides.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/locations.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
-	gcc -g -o $(BIN_DIR)/$(EXE_FILE) $(OBJ_DIR)/main.o $(OBJ_DIR)/rides.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/locations.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
+$(BIN_DIR)/$(EXE_FILE): $(OBJ_DIR)/main.o $(OBJ_DIR)/rides.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/locations.o $(OBJ_DIR)/collections.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
+	gcc -g -o $(BIN_DIR)/$(EXE_FILE) $(OBJ_DIR)/main.o $(OBJ_DIR)/rides.o $(OBJ_DIR)/vehicles.o $(OBJ_DIR)/locations.o $(OBJ_DIR)/collections.o $(OBJ_DIR)/clients.o $(OBJ_DIR)/managers.o $(OBJ_DIR)/auth.o $(OBJ_DIR)/menus.o $(OBJ_DIR)/utilities.o
 
 $(OBJ_DIR)/main.o: $(SRC_DIR)/main.c
 	gcc -g -o $(OBJ_DIR)/main.o $(SRC_DIR)/main.c -c
@@ -21,6 +21,9 @@ $(OBJ_DIR)/vehicles.o: $(SRC_DIR)/vehicles.c $(INC_DIR)/header.h
 
 $(OBJ_DIR)/locations.o: $(SRC_DIR)/locations.c $(INC_DIR)/header.h
 	gcc -g -o $(OBJ_DIR)/locations.o $(SRC_DIR)/locations.c -c
+
+$(OBJ_DIR)/collections.o: $(SRC_DIR)/collections.c $(INC_DIR)/header.h
+	gcc -g -o $(OBJ_DIR)/collections.o $(SRC_DIR)/collections.c -c
 
 $(OBJ_DIR)/clients.o: $(SRC_DIR)/clients.c $(INC_DIR)/header.h
 	gcc -g -o $(OBJ_DIR)/clients.o $(SRC_DIR)/clients.c -c
