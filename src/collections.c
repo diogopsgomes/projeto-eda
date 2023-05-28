@@ -65,6 +65,19 @@ void collectionsMain(int manager) {
     } while (option != 0);
 }
 
+/**
+ * The function collects data from a given starting location by visiting adjacent locations using
+ * vehicles and saves the collected data.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ * @param headVehicles A pointer to the head of a linked list of Vehicle structs.
+ * @param headLocations A pointer to the head of a linked list of Location structs, representing all
+ * the locations in the system.
+ * @param startLocation The starting location for the collection route.
+ * @param manager An integer representing the ID of the manager responsible for the collection.
+ *
+ * @return a pointer to a Collection, which is the updated head of the linked list of collections.
+ */
 Collection* collect(Collection* head, Vehicle* headVehicles, Location* headLocations, char startLocation[], int manager) {
     Vehicle* v;
     Adjacent* a;
@@ -141,6 +154,20 @@ Collection* collect(Collection* head, Vehicle* headVehicles, Location* headLocat
     return head;
 }
 
+/**
+ * The function inserts a new collection into a linked list of collections.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ * @param id an integer representing the unique identifier of the collection
+ * @param startLocation A character array that represents the starting location of the collection.
+ * @param datetime The datetime parameter is a variable of type time_t, which represents the date and
+ * time of the collection. It is likely stored as a Unix timestamp, which is the number of seconds that
+ * have elapsed since January 1, 1970, 00:00:00 UTC.
+ * @param manager The parameter "manager" is an integer that represents the ID of the user who is
+ * managing the collection.
+ *
+ * @return a pointer to the head of the linked list of collections.
+ */
 Collection* insertCollection(Collection* head, int id, char startLocation[], time_t datetime, int manager) {
     Collection* new = malloc(sizeof(struct collection));
 
@@ -163,6 +190,16 @@ Collection* insertCollection(Collection* head, int id, char startLocation[], tim
     return head;
 }
 
+/**
+ * The function inserts a new point into a collection with a given ID and location.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ * @param id The ID of the collection where the new point will be inserted.
+ * @param location The location parameter is a string that represents the ID or name of a point that is
+ * being inserted into a collection.
+ *
+ * @return a pointer to a Collection, which is the head of the linked list.
+ */
 Collection* insertPoint(Collection* head, int id, char location[]) {
     Collection* aux = head;
 
@@ -191,6 +228,18 @@ Collection* insertPoint(Collection* head, int id, char location[]) {
     return head;
 }
 
+/**
+ * The function inserts a new vehicle ID into a specific location's collection within a given
+ * collection list.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ * @param id The ID of the collection to which the new collected item will be added.
+ * @param location A string representing the location where an item was collected.
+ * @param vehicle The parameter "vehicle" is an integer representing the ID of the vehicle that
+ * collected the item at the specified location.
+ *
+ * @return a pointer to the head of the Collection linked list.
+ */
 Collection* insertCollected(Collection* head, int id, char location[], int vehicle) {
     Collection* aux = head;
 
@@ -224,6 +273,14 @@ Collection* insertCollected(Collection* head, int id, char location[], int vehic
     return head;
 }
 
+/**
+ * The function inserts a new visited location into a linked list.
+ *
+ * @param head a pointer to the head of a linked list of Visited nodes.
+ * @param location a string representing the ID of a location that the user has visited.
+ *
+ * @return a pointer to the head of the linked list of visited locations.
+ */
 Visited* insertVisited(Visited* head, char location[]) {
     Visited* new = malloc(sizeof(struct visited));
 
@@ -242,6 +299,17 @@ Visited* insertVisited(Visited* head, char location[]) {
     return head;
 }
 
+/**
+ * The function lists the collections, their start location, date and time, and the collected vehicles
+ * at each collection point.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ * @param headVehicles A pointer to the head of a linked list of Vehicle structs.
+ * @param headTypes A pointer to the head of a linked list of Type structs.
+ *
+ * @return The function does not return anything, it only prints information about the collections and
+ * their points of collection.
+ */
 void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes) {
     if (head == NULL) {
         printf("Nao foi possivel obter os dados das recolhas.\n");
@@ -277,6 +345,18 @@ void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes) {
     }
 }
 
+/**
+ * The function lists the details of the latest collection, including the start location, date and
+ * time, and the collected vehicles at each point of collection.
+ *
+ * @param head a pointer to the head of a linked list of Collection structs
+ * @param headVehicles A pointer to the head of a linked list of Vehicle structs.
+ * @param headTypes A pointer to the head of a linked list of Type structs, which contain information
+ * about the types of vehicles available in the system.
+ *
+ * @return The function does not return anything, it only prints information about the latest
+ * collection.
+ */
 void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTypes) {
     if (head == NULL) {
         printf("Nao foi possivel obter os dados da ultima recolha.\n");
@@ -310,6 +390,13 @@ void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTyp
     }
 }
 
+/**
+ * This function assigns a unique ID to a new element in a linked list.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ *
+ * @return an integer value, which is the next available ID for a new collection.
+ */
 int assignCollectionId(Collection* head) {
     while (head != NULL) {
         if (head->next == NULL) return head->id + 1;
@@ -320,6 +407,19 @@ int assignCollectionId(Collection* head) {
     return 1;
 }
 
+/**
+ * The function checks if a given location has been visited before by searching through a linked list
+ * of visited locations.
+ *
+ * @param head a pointer to the head of a linked list of Visited nodes
+ * @param location A character array representing the ID of a location that we want to check if it has
+ * been visited before.
+ *
+ * @return an integer value of either 1 or 0. The value 1 indicates that the location passed as an
+ * argument has been visited before and is present in the linked list pointed to by the head parameter.
+ * The value 0 indicates that the location has not been visited before and is not present in the linked
+ * list.
+ */
 int isVisited(Visited* head, char location[]) {
     while (head != NULL) {
         if (strcmp(head->id, location) == 0) return 1;
@@ -330,6 +430,15 @@ int isVisited(Visited* head, char location[]) {
     return 0;
 }
 
+/**
+ * The function saves a linked list of collections, along with their points and collected integers, to
+ * a binary file.
+ *
+ * @param head A pointer to the head of a linked list of Collection structs.
+ *
+ * @return an integer value. If the file "collections.bin" is successfully opened for writing, the
+ * function returns 1. If the file cannot be opened, the function returns 0.
+ */
 int saveCollections(Collection* head) {
     FILE* fp = fopen(DATA_DIR"collections.bin", "wb");
     if (fp == NULL) return 0;
@@ -360,6 +469,12 @@ int saveCollections(Collection* head) {
     return 1;
 }
 
+/**
+ * This function loads collections from a binary file and returns a pointer to the head of the linked
+ * list.
+ *
+ * @return a pointer to the head of a linked list of Collection structs.
+ */
 Collection* loadCollections() {
     FILE* fp = fopen(DATA_DIR"collections.bin", "rb");
     Collection* head = NULL;

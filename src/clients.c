@@ -328,6 +328,17 @@ char* getClientUsername(Client* head, int id) {
     return "*********";
 }
 
+/**
+ * The function returns the location of a client with a given ID, or "*********" if the client is not
+ * found.
+ *
+ * @param head A pointer to the head of a linked list of Client structs.
+ * @param id The parameter "id" is an integer representing the unique identifier of a client.
+ *
+ * @return The function `getClientLocation` returns a `char*` which is either the location of the
+ * client with the given `id` or the string `"*********"` if the client with the given `id` is not
+ * found in the linked list.
+ */
 char* getClientLocation(Client* head, int id) {
     while (head != NULL) {
         if (head->id == id) return head->location;

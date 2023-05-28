@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vehicle_0',['Vehicle',['../header_8h.html#acd14f01a01d6db55c65d8f93e672cbed',1,'header.h']]]
+  ['manager_0',['Manager',['../header_8h.html#ab10b2eb5ac2f5f6372c39fc4d84c6353',1,'header.h']]]
 ];

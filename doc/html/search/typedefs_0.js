@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['client_0',['Client',['../header_8h.html#aad3c9b1c9dc8377270fc754530a3ce4d',1,'header.h']]]
+  ['adjacent_0',['Adjacent',['../header_8h.html#a251000a4a6fb0bd5fbb7be55a068d902',1,'header.h']]]
 ];

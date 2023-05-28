@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vehicle_0',['vehicle',['../structride.html#a96b8f0fa9ab1e12aed840c7293becbf7',1,'ride']]]
+  ['username_0',['username',['../structclient.html#a52424734bd09841aecebfc3875019c47',1,'client::username()'],['../structmanager.html#a52424734bd09841aecebfc3875019c47',1,'manager::username()']]]
 ];

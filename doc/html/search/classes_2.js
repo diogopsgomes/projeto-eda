@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ride_0',['ride',['../structride.html',1,'']]]
+  ['integer_0',['integer',['../structinteger.html',1,'']]]
 ];

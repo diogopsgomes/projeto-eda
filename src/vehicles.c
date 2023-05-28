@@ -298,6 +298,20 @@ int listVehiclesByRange(Vehicle* head, Type* headTypes, Location* headLocations,
     return listVehicles(head, headTypes, headLocations, location);
 }
 
+/**
+ * This function sorts a linked list of vehicles by their battery level and then lists them.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param headTypes A pointer to the head of a linked list of Type structs, which contain information
+ * about the types of vehicles (e.g. electric, hybrid, gas).
+ * @param headLocations A pointer to the head of a linked list of Location structs.
+ * @param location The parameter "location" is a string that represents the location where the vehicles
+ * are located. It is used as a filter to only list the vehicles that are located in that specific
+ * location.
+ *
+ * @return the result of calling the function `listVehicles` with the sorted linked list of vehicles as
+ * its first argument, and the other arguments passed to the function as well.
+ */
 int listVehiclesByBattery(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
     int swapped;
 
@@ -332,6 +346,20 @@ int listVehiclesByBattery(Vehicle* head, Type* headTypes, Location* headLocation
     return listVehicles(head, headTypes, headLocations, location);
 }
 
+/**
+ * This function lists vehicles in ascending order of distance from a given location, with ties broken
+ * by range.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param headTypes a pointer to the head of a linked list of Type structs
+ * @param headLocations a pointer to the head of a linked list of Location structs
+ * @param location A string representing the location for which the vehicles need to be listed in order
+ * of increasing distance.
+ *
+ * @return an integer value, which is the result of calling the function `listVehicles` with the sorted
+ * linked list of vehicles as its first argument, and the other linked lists as the remaining
+ * arguments.
+ */
 int listVehiclesByDistance(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
     int swapped;
 
@@ -404,6 +432,22 @@ int listVehiclesInLocation(Vehicle* head, Type* headTypes, Location* headLocatio
     return listVehiclesByRange(filtered, headTypes, headLocations, location);
 }
 
+/**
+ * The function lists all vehicles within a certain radius of a given location.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param headTypes A pointer to the head of a linked list of vehicle types.
+ * @param headLocations A linked list of Location structs containing information about the locations of
+ * vehicles.
+ * @param location The location parameter is a string that represents the starting location from which
+ * the distance to each vehicle's location will be calculated.
+ * @param radius The radius is a float value that represents the maximum distance from a given location
+ * within which vehicles should be listed.
+ *
+ * @return the result of calling the function `listVehiclesByDistance` with the filtered list of
+ * vehicles as the first argument, and the head of the types and locations linked lists, as well as a
+ * location string, as the remaining arguments.
+ */
 int listVehiclesInRadius(Vehicle* head, Type* headTypes, Location* headLocations, char location[], float radius) {
     Vehicle* filtered = NULL;
 
@@ -418,6 +462,25 @@ int listVehiclesInRadius(Vehicle* head, Type* headTypes, Location* headLocations
     return listVehiclesByDistance(filtered, headTypes, headLocations, location);
 }
 
+/**
+ * This function filters a linked list of vehicles by type and location within a certain radius and
+ * then lists them by distance.
+ *
+ * @param head A pointer to the head of a linked list of Vehicle structs.
+ * @param headTypes It is a pointer to the head of a linked list of Type structs.
+ * @param headLocations A pointer to the head of a linked list of Location structs, which contains
+ * information about the locations of vehicles.
+ * @param type an integer representing the type of vehicle to filter by. If set to 0, all types of
+ * vehicles will be included in the result.
+ * @param location The location parameter is a string that represents the location from which the
+ * distance to the vehicles will be calculated.
+ * @param radius The radius is a float value that represents the maximum distance from a given location
+ * within which vehicles of a certain type should be listed.
+ *
+ * @return the result of calling the function `listVehiclesByDistance` with the filtered list of
+ * vehicles as the first argument, and the head of the types and locations lists and the specified
+ * location as the remaining arguments.
+ */
 int listVehiclesByTypeInRadius(Vehicle* head, Type* headTypes, Location* headLocations, int type, char location[], float radius) {
     Vehicle* filtered = NULL;
 
@@ -432,6 +495,19 @@ int listVehiclesByTypeInRadius(Vehicle* head, Type* headTypes, Location* headLoc
     return listVehiclesByDistance(filtered, headTypes, headLocations, location);
 }
 
+/**
+ * This function filters vehicles with battery levels below 50% and lists them by location.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param headTypes A pointer to the head of the linked list of vehicle types.
+ * @param headLocations A pointer to the head of a linked list of Location structs, which contains
+ * information about the locations of vehicles.
+ * @param location The parameter "location" is a string that represents the name of a location. It is
+ * used as a filter to list only the vehicles that are located in that specific location.
+ *
+ * @return the result of calling the function `listVehiclesByBattery()` with the filtered list of
+ * vehicles as the first argument, along with the other arguments passed to the function.
+ */
 int listVehiclesByBatteryHalfCharged(Vehicle* head, Type* headTypes, Location* headLocations, char location[]) {
     Vehicle* filtered = NULL;
 
@@ -529,6 +605,15 @@ int isVehicleCharged(Vehicle* head, int id) {
     return 0;
 }
 
+/**
+ * The function updates the location of a vehicle with a given ID in a linked list.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param id The id parameter is an integer that represents the unique identifier of a vehicle.
+ * @param location The parameter "location" is a character array that represents the new location of a
+ * vehicle. This function updates the location of a vehicle with the given "id" to the new location
+ * provided in the "location" parameter.
+ */
 void updateVehicleLocation(Vehicle* head, int id, char location[]) {
     while (head != NULL) {
         if (head->id == id) {
@@ -541,6 +626,15 @@ void updateVehicleLocation(Vehicle* head, int id, char location[]) {
     }
 }
 
+/**
+ * The function charges all vehicles located in a specific location by setting their battery to 100%
+ * and updating their range accordingly.
+ *
+ * @param head A pointer to the head of a linked list of Vehicle structures.
+ * @param location The location where the vehicles are currently parked or located.
+ *
+ * @return a pointer to the head of the linked list of vehicles.
+ */
 Vehicle* chargeVehicles(Vehicle* head, char location[]) {
     Vehicle* aux = head;
 
@@ -632,6 +726,17 @@ Vehicle* readVehicles() {
     return aux;
 }
 
+/**
+ * The function returns the name of a vehicle type given its ID, by iterating through a linked list of
+ * vehicles and using a separate linked list of types.
+ *
+ * @param head A pointer to the head of a linked list of Vehicle structs.
+ * @param headTypes A pointer to the head of a linked list of Type structs.
+ * @param id The id parameter is an integer that represents the unique identifier of a vehicle.
+ *
+ * @return a string that represents the name of the vehicle type associated with the given ID. If the
+ * ID is not found in the linked list of vehicles, the function returns a string of asterisks.
+ */
 char* getVehicleTypeName(Vehicle* head, Type* headTypes, int id) {
     while (head != NULL) {
         if (head->id == id) return getTypeName(headTypes, head->type);
@@ -642,6 +747,17 @@ char* getVehicleTypeName(Vehicle* head, Type* headTypes, int id) {
     return "*********";
 }
 
+/**
+ * The function returns the battery level of a vehicle with a given ID from a linked list of vehicles.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param id The id parameter is an integer that represents the unique identifier of a vehicle.
+ *
+ * @return The function `getVehicleBattery` returns a float value representing the battery level of a
+ * vehicle with the given `id`. If a vehicle with the given `id` is found in the linked list pointed to
+ * by `head`, the function returns the battery level of that vehicle. If no vehicle with the given `id`
+ * is found, the function returns -1.
+ */
 float getVehicleBattery(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) return head->battery;
@@ -652,6 +768,16 @@ float getVehicleBattery(Vehicle* head, int id) {
     return -1;
 }
 
+/**
+ * The function returns the location of a vehicle with a given ID from a linked list of vehicles.
+ *
+ * @param head a pointer to the head of a linked list of Vehicle structs
+ * @param id The id parameter is an integer that represents the unique identifier of a vehicle.
+ *
+ * @return If a vehicle with the given ID is found in the linked list, the function returns the
+ * location of that vehicle as a string. If no vehicle with the given ID is found, the function returns
+ * the string "*********".
+ */
 char* getVehicleLocation(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) return head->location;
