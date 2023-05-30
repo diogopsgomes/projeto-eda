@@ -379,8 +379,10 @@ int main() {
                                         break;
                                     case 5:
                                         locationsMain();
+                                        break;
                                     case 6:
                                         collectionsMain(user);
+                                        break;
                                     default:
                                         break;
                                 }
