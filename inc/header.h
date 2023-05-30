@@ -191,7 +191,7 @@ Collection* insertPoint(Collection* head, int id, char location[]);
 Collection* insertCollected(Collection* head, int id, char location[], int vehicle);
 Visited* insertVisited(Visited* head, char location[]);
 void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes);
-void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTypes);
+void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTypes, Location* headLocations);
 int assignCollectionId(Collection* head);
 int isVisited(Visited* head, char location[]);
 int saveCollections(Collection* head);

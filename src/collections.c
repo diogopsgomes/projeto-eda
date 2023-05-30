@@ -41,7 +41,7 @@ void collectionsMain(int manager) {
 
                 clrscr();
 
-                listLatestCollection(head, headVehicles, headTypes);
+                listLatestCollection(head, headVehicles, headTypes, headLocations);
 
                 saveCollections(head);
 
@@ -357,15 +357,20 @@ void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes) {
  * @return The function does not return anything, it only prints information about the latest
  * collection.
  */
-void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTypes) {
+void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTypes, Location* headLocations) {
     if (head == NULL) {
         printf("Nao foi possivel obter os dados da ultima recolha.\n");
         return;
     }
 
+    float count = 0, distance;
+
     Collection* latest = head;
 
     while (latest->next != NULL) latest = latest->next;
+
+    char lastLocation[SIZE_LOCATION];
+    strcpy(lastLocation, latest->startLocation);
 
     puts("Ultima Recolha:\n");
     printf("Local de Partida: %s\n", latest->startLocation);
@@ -376,7 +381,9 @@ void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTyp
     printf("Pontos de Recolha:\n");
 
     while (currentPoint != NULL) {
-        printf("|--> %s\n", currentPoint->id);
+        printf("|--> %s (%.3f km)\n", currentPoint->id, distance = getDistance(headLocations, lastLocation, currentPoint->id));
+
+        count += distance;
 
         Integer* currentCollected = currentPoint->collected;
 
@@ -386,8 +393,12 @@ void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTyp
             currentCollected = currentCollected->next;
         }
 
+        strcpy(lastLocation, currentPoint->id);
+
         currentPoint = currentPoint->next;
     }
+
+    printf("Distancia Percorrida: %.3f km\n\n", count);
 }
 
 /**
