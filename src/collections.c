@@ -158,7 +158,7 @@ Collection* collect(Collection* head, Vehicle* headVehicles, Location* headLocat
  * The function inserts a new collection into a linked list of collections.
  *
  * @param head A pointer to the head of a linked list of Collection structs.
- * @param id an integer representing the unique identifier of the collection
+ * @param id An integer representing the unique identifier of the collection
  * @param startLocation A character array that represents the starting location of the collection.
  * @param datetime The datetime parameter is a variable of type time_t, which represents the date and
  * time of the collection. It is likely stored as a Unix timestamp, which is the number of seconds that
@@ -276,8 +276,8 @@ Collection* insertCollected(Collection* head, int id, char location[], int vehic
 /**
  * The function inserts a new visited location into a linked list.
  *
- * @param head a pointer to the head of a linked list of Visited nodes.
- * @param location a string representing the ID of a location that the user has visited.
+ * @param head A pointer to the head of a linked list of Visited nodes.
+ * @param location A string representing the ID of a location that the user has visited.
  *
  * @return a pointer to the head of the linked list of visited locations.
  */
@@ -347,12 +347,12 @@ void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes) {
 
 /**
  * The function lists the details of the latest collection, including the start location, date and
- * time, and the collected vehicles at each point of collection.
+ * time, collected vehicles at each point of collection and the distance traveled.
  *
- * @param head a pointer to the head of a linked list of Collection structs
+ * @param head A pointer to the head of a linked list of Collection structs
  * @param headVehicles A pointer to the head of a linked list of Vehicle structs.
- * @param headTypes A pointer to the head of a linked list of Type structs, which contain information
- * about the types of vehicles available in the system.
+ * @param headTypes A pointer to the head of a linked list of vehicle types.
+ * @param headLocations A pointer to the head of a linked list of Location structs.
  *
  * @return The function does not return anything, it only prints information about the latest
  * collection.
@@ -422,7 +422,7 @@ int assignCollectionId(Collection* head) {
  * The function checks if a given location has been visited before by searching through a linked list
  * of visited locations.
  *
- * @param head a pointer to the head of a linked list of Visited nodes
+ * @param head A pointer to the head of a linked list of Visited nodes
  * @param location A character array representing the ID of a location that we want to check if it has
  * been visited before.
  *
@@ -484,7 +484,7 @@ int saveCollections(Collection* head) {
  * This function loads collections from a binary file and returns a pointer to the head of the linked
  * list.
  *
- * @return a pointer to the head of a linked list of Collection structs.
+ * @return A pointer to the head of a linked list of Collection structs.
  */
 Collection* loadCollections() {
     FILE* fp = fopen(DATA_DIR"collections.bin", "rb");
