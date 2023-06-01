@@ -571,9 +571,7 @@ int assignVehicleId(Vehicle* head) {
 int isVehicleAvailable(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
-            if (head->available == 1) {
-                return 1;
-            }
+            if (head->available == 1) return 1;
         }
 
         head = head->next;
@@ -594,9 +592,7 @@ int isVehicleAvailable(Vehicle* head, int id) {
 int isVehicleCharged(Vehicle* head, int id) {
     while (head != NULL) {
         if (head->id == id) {
-            if (head->battery > 0 && head->range > 0) {
-                return 1;
-            }
+            if (head->battery > 0 && head->range > 0) return 1;
         }
 
         head = head->next;

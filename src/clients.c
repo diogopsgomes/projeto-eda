@@ -332,7 +332,7 @@ char* getClientUsername(Client* head, int id) {
  * The function returns the location of a client with a given ID, or "*********" if the client is not
  * found.
  *
- * @param head A pointer to the head of a linked list of Client structs.
+ * @param head The head of the linked list
  * @param id The parameter "id" is an integer representing the unique identifier of a client.
  *
  * @return The function `getClientLocation` returns a `char*` which is either the location of the
@@ -347,6 +347,26 @@ char* getClientLocation(Client* head, int id) {
     }
 
     return "*********";
+}
+
+/**
+ * The function retrieves the balance of a client with a given ID from a linked list of clients.
+ *
+ * @param head A pointer to the head of a linked list of Client structs
+ * @param id The ID of the client whose balance is being searched for.
+ *
+ * @return The function `getClientBalance` returns the balance of the client with the specified `id` if
+ * found in the linked list pointed to by `head`. If the client with the specified `id` is not found,
+ * the function returns `-1`. The return type of the function is `float`.
+ */
+float getClientBalance(Client* head, int id) {
+    while (head != NULL) {
+        if (head->id == id) return head->balance;
+
+        head = head->next;
+    }
+
+    return -1;
 }
 
 // Check if Username is already in use

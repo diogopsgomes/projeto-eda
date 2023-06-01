@@ -63,7 +63,9 @@ int main() {
 
                                 clrscr();
                                 menuApp();
-                                printf("Ola, %s!\n\n", getClientName(headClients, user));
+                                printf("Ola, %s!\n", getClientName(headClients, user));
+                                printf("Estas em %s (%s).\n", getLocationName(headLocations, getClientLocation(headClients, user)), getClientLocation(headClients, user));
+                                printf("Tens %.2f euros.\n\n", getClientBalance(headClients, user));
 
                                 menuHeaderClient();
                                 if (listClient(headClients, user) == 0) {

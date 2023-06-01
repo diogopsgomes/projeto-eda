@@ -207,6 +207,7 @@ int listClient(Client* head, int id);
 char* getClientName(Client* head, int id);
 char* getClientUsername(Client* head, int id);
 char* getClientLocation(Client* head, int id);
+float getClientBalance(Client* head, int id);
 int existClientUsername(Client* head, char username[]);
 int existClient(Client* head, int id);
 int assignClientId(Client* head);

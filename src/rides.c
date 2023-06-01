@@ -112,6 +112,7 @@ Ride* startRide(Ride* head, Vehicle* headVehicles, Type* headTypes, Client* head
  * @param headVehicles Pointer to the first vehicle in the linked list
  * @param headTypes Pointer to the first type of vehicle in the linked list
  * @param headClients Pointer to the first client in the linked list
+ * @param headLocations Pointer to the first location in the linked list
  * @param id The id of the ride
  * @param endLocation The end location of the ride
  */

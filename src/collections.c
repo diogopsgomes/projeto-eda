@@ -398,7 +398,11 @@ void listLatestCollection(Collection* head, Vehicle* headVehicles, Type* headTyp
         currentPoint = currentPoint->next;
     }
 
-    printf("Distancia Percorrida: %.3f km\n\n", count);
+    printf("Distancia Percorrida: %.3f km\n", count);
+
+    count += getDistance(headLocations, lastLocation, latest->startLocation);
+
+    printf("Distancia Total: %.3f km\n\n", count);
 }
 
 /**
