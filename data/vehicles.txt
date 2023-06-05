@@ -1,5 +1,9 @@
-1;1;50.000000;100.000000;1;tatica.ideia.morno
+1;1;100.000000;200.000000;1;tatica.ideia.morno
 2;2;0.000000;0.000000;1;chia.tigela.palmitos
-3;2;40.000000;80.000000;1;conta.mumias.bolota
+3;1;10.000000;20.000000;1;conta.mumias.bolota
 4;2;20.000000;40.000000;1;entrelinha.resolvidas.fixo
-5;2;30.000000;60.000000;1;evolucao.adido.vitorioso
+5;1;30.000000;60.000000;1;evolucao.adido.vitorioso
+6;2;40.000000;80.000000;1;regua.vinco.velho
+7;1;50.000000;100.000000;1;tirei.manhas.lagoa
+8;2;60.000000;120.000000;1;tropa.ocio.garota
+9;1;70.000000;140.000000;1;uteis.margem.forem

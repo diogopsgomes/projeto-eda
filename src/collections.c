@@ -333,7 +333,7 @@ void listCollections(Collection* head, Vehicle* headVehicles, Type* headTypes) {
             Integer* currentCollected = currentPoint->collected;
 
             while (currentCollected != NULL) {
-                printf("     |--> %d | %s | %.1f%%\n", currentCollected->id, getVehicleTypeName(headVehicles, headTypes, currentCollected->id), getVehicleBattery(headVehicles, currentCollected->id));
+                printf("     |--> %06d | %s | %.1f%%\n", currentCollected->id, getVehicleTypeName(headVehicles, headTypes, currentCollected->id), getVehicleBattery(headVehicles, currentCollected->id));
 
                 currentCollected = currentCollected->next;
             }
